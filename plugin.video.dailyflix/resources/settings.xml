@@ -1,0 +1,17 @@
+<settings>
+<category label="Accounts">
+	<setting id="movreelResolver_login" type="bool" label="Movreel Account Enable" default="false"/>
+	<setting id="movreelResolver_username" type="text" label="Username" enable="!eq(-1,false)"/>
+	<setting id="movreelResolver_password" type="text" label="Password" option="hidden" enable="!eq(-2,false)"/>
+	<setting type="sep" />
+	<setting id="veeHDResolver_login" type="bool" label="VeeHD Account Enable" default="false"/>
+	<setting id="veeHDResolver_username" type="text" label="Username" enable="!eq(-1,false)"/>
+	<setting id="veeHDResolver_password" type="text" label="Password" option="hidden" enable="!eq(-2,false)"/>	
+</category>
+<category label="Auto-View">
+	<setting id="auto-view" type="bool" label="Enable Automatic View" default="false"/>
+	<setting id="epg" type="number" label="EPG View" default="503" enable="!eq(-1,false)"/>
+	<setting id="default" type="number" label="EVERYTHING" default="503" enable="!eq(-1,false)"/>
+	<setting id="anything" type="number" label="SECOND DIRECTORY" default="503" enable="!eq(-1,false)"/>
+</category>
+</settings>
