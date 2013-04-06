@@ -1,62 +1,54 @@
 import urllib,urllib2,sys,re,xbmcplugin,xbmcgui,xbmcaddon,xbmc
 import urlresolver, os
 from t0mm0.common.net import Net
-#below you can add anything here just to keep your typing down to a minimum(shortcuts)
-     
-# i.e
+import datetime
+import time
+
+    
+PATH = "dailyflix"       
+UATRACK="UA-38375410-1"
+VERSION = "V1.1"
+
 icon = 'http://www.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
 hdicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/My-Videos-icon.png'
 flashicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Macromedia-Flash-icon.png'
 searchicon = 'http://icons.iconarchive.com/icons/iconleak/atrous/256/search-icon.png'
-#now look at the first addDir where i have written icon then look at second listed item i have put the url for image directly makes no odds how you do it !!
      
 ADDON = xbmcaddon.Addon(id='plugin.video.dailyflix')
 net = Net()
 img = ''
 
-
-
-
-
-def send_request_to_google_analytics(utm_url):
-    ua='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
-    import urllib2
-    try:
-        req = urllib2.Request(utm_url, None,
-                                    {'User-Agent':ua}
-                                     )
-        response = urllib2.urlopen(req).read()
-    except:
-        print ("GA fail: %s" % utm_url)         
-    return response
-       
-def send_request_to_google_analytics(utm_url):
-    ua='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
-    import urllib2
-    try:
-        req = urllib2.Request(utm_url, None,
-                                    {'User-Agent':ua}
-                                     )
-        response = urllib2.urlopen(req).read()
-    except:
-        print ("GA fail: %s" % utm_url)         
-    return response
-  
-     
-ADDON = xbmcaddon.Addon(id='plugin.video.dailyflix')#<<<--------------
-datapath = xbmc.translatePath(ADDON.getAddonInfo('profile'))
-if os.path.exists(datapath)==False:
-    os.mkdir(datapath) 
-VISITOR_NUMBER = os.path.join(datapath, 'visitor')
-
-if os.path.exists(VISITOR_NUMBER)==False:
+if ADDON.getSetting('ga_visitor')=='':
     from random import randint
-    txtfile = open(VISITOR_NUMBER,"w") 
-    txtfile.write(str(randint(0, 0x7fffffff)))
-    txtfile.close()
+    ADDON.setSetting('ga_visitor',str(randint(0, 0x7fffffff)))
 
+def parseDate(dateString):
+    try:
+        return datetime.datetime.fromtimestamp(time.mktime(time.strptime(dateString.encode('utf-8', 'replace'), "%Y-%m-%d %H:%M:%S")))
+    except:
+        return datetime.datetime.today() - datetime.timedelta(days = 1) #force update
+
+
+def checkGA():
+
+    secsInHour = 60 * 60
+    threshold  = 2 * secsInHour
+
+    now   = datetime.datetime.today()
+    prev  = parseDate(ADDON.getSetting('ga_time'))
+    delta = now - prev
+    nDays = delta.days
+    nSecs = delta.seconds
+
+    doUpdate = (nDays > 0) or (nSecs > threshold)
+    if not doUpdate:
+        return
+
+    ADDON.setSetting('ga_time', str(now).split('.')[0])
+    APP_LAUNCH()    
     
+                    
 def send_request_to_google_analytics(utm_url):
     ua='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
     import urllib2
@@ -80,19 +72,29 @@ def GA(group,name):
             from urllib import unquote, quote
             from os import environ
             from hashlib import sha1
-            VERSION = "4.2.8"
-            VISITOR = open(VISITOR_NUMBER).read()
-            PATH = "XBMC_NOTFILMON" #<---------------------------------           
-            UATRACK="UA-38375410-1"#<-------------------------------
-            website = "www.filmon.com"         
+            VISITOR = ADDON.getSetting('visitor_ga')
             utm_gif_location = "http://www.google-analytics.com/__utm.gif"
+            if not group=="None":
+                    utm_track = utm_gif_location + "?" + \
+                            "utmwv=" + VERSION + \
+                            "&utmn=" + str(randint(0, 0x7fffffff)) + \
+                            "&utmt=" + "event" + \
+                            "&utme="+ quote("5("+PATH+"*"+group+"*"+name+")")+\
+                            "&utmp=" + quote(PATH) + \
+                            "&utmac=" + UATRACK + \
+                            "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR,VISITOR,"2"])
+                    try:
+                        print "============================ POSTING TRACK EVENT ============================"
+                        send_request_to_google_analytics(utm_track)
+                    except:
+                        print "============================  CANNOT POST TRACK EVENT ============================" 
             if name=="None":
                     utm_url = utm_gif_location + "?" + \
                             "utmwv=" + VERSION + \
                             "&utmn=" + str(randint(0, 0x7fffffff)) + \
                             "&utmp=" + quote(PATH) + \
                             "&utmac=" + UATRACK + \
-                            "&utmcc=__utma=%s" % ".".join(["1", "1", VISITOR, "1", "1","2"])
+                            "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR, VISITOR,"2"])
             else:
                 if group=="None":
                        utm_url = utm_gif_location + "?" + \
@@ -100,48 +102,112 @@ def GA(group,name):
                                 "&utmn=" + str(randint(0, 0x7fffffff)) + \
                                 "&utmp=" + quote(PATH+"/"+name) + \
                                 "&utmac=" + UATRACK + \
-                                "&utmcc=__utma=%s" % ".".join(["1", "1", VISITOR, "1", "1","2"])
+                                "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR, VISITOR,"2"])
                 else:
                        utm_url = utm_gif_location + "?" + \
                                 "utmwv=" + VERSION + \
                                 "&utmn=" + str(randint(0, 0x7fffffff)) + \
                                 "&utmp=" + quote(PATH+"/"+group+"/"+name) + \
                                 "&utmac=" + UATRACK + \
-                                "&utmcc=__utma=%s" % ".".join(["1", "1", VISITOR, "1", "1","2"])
+                                "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR, VISITOR,"2"])
                                 
             print "============================ POSTING ANALYTICS ============================"
             send_request_to_google_analytics(utm_url)
             
-            if not group=="None":
-                    utm_track = utm_gif_location + "?" + \
-                            "utmwv=" + VERSION + \
-                            "&utmn=" + str(randint(0, 0x7fffffff)) + \
-                            "&utmhn=" + quote(website) + \
-                            "&utmt=" + "events" + \
-                            "&utme="+ quote("5("+PATH+"*"+group+"*"+name+")")+\
-                            "&utmp=" + quote(PATH) + \
-                            "&utmac=" + UATRACK + \
-                            "&utmcc=__utma=%s" % ".".join(["1", "1", "1", VISITOR,"1","2"])
-                    try:
-                        print "============================ POSTING TRACK EVENT ============================"
-                        send_request_to_google_analytics(utm_track)
-                    except:
-                        print "============================  CANNOT POST TRACK EVENT ============================" 
-
         except:
-            print "================  CANNOT POST TO ANALYTICS  ================"
+            print "================  CANNOT POST TO ANALYTICS  ================" 
+            
+            
+def APP_LAUNCH():
+        versionNumber = int(xbmc.getInfoLabel("System.BuildVersion" )[0:2])
+        if versionNumber < 12:
+            if xbmc.getCondVisibility('system.platform.osx'):
+                if xbmc.getCondVisibility('system.platform.atv2'):
+                    log_path = '/var/mobile/Library/Preferences'
+                else:
+                    log_path = os.path.join(os.path.expanduser('~'), 'Library/Logs')
+            elif xbmc.getCondVisibility('system.platform.ios'):
+                log_path = '/var/mobile/Library/Preferences'
+            elif xbmc.getCondVisibility('system.platform.windows'):
+                log_path = xbmc.translatePath('special://home')
+                log = os.path.join(log_path, 'xbmc.log')
+                logfile = open(log, 'r').read()
+            elif xbmc.getCondVisibility('system.platform.linux'):
+                log_path = xbmc.translatePath('special://home/temp')
+            else:
+                log_path = xbmc.translatePath('special://logpath')
+            log = os.path.join(log_path, 'xbmc.log')
+            logfile = open(log, 'r').read()
+            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
+        elif versionNumber > 11:
+            print '======================= more than ===================='
+            log_path = xbmc.translatePath('special://logpath')
+            log = os.path.join(log_path, 'xbmc.log')
+            logfile = open(log, 'r').read()
+            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
+        else:
+            logfile='Starting XBMC (Unknown Git:.+?Platform: Unknown. Built.+?'
+            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
+        print '==========================   '+PATH+' '+VERSION+'  =========================='
+        try:
+            from hashlib import md5
+        except:
+            from md5 import md5
+        from random import randint
+        import time
+        from urllib import unquote, quote
+        from os import environ
+        from hashlib import sha1
+        import platform
+        VISITOR = ADDON.getSetting('visitor_ga')
+        for build, PLATFORM in match:
+            if re.search('12',build[0:2],re.IGNORECASE): 
+                build="Frodo" 
+            if re.search('11',build[0:2],re.IGNORECASE): 
+                build="Eden" 
+            if re.search('13',build[0:2],re.IGNORECASE): 
+                build="Gotham" 
+            print build
+            print PLATFORM
+            utm_gif_location = "http://www.google-analytics.com/__utm.gif"
+            utm_track = utm_gif_location + "?" + \
+                    "utmwv=" + VERSION + \
+                    "&utmn=" + str(randint(0, 0x7fffffff)) + \
+                    "&utmt=" + "event" + \
+                    "&utme="+ quote("5(APP LAUNCH*"+build+"*"+PLATFORM+")")+\
+                    "&utmp=" + quote(PATH) + \
+                    "&utmac=" + UATRACK + \
+                    "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR,VISITOR,"2"])
+            try:
+                print "============================ POSTING APP LAUNCH TRACK EVENT ============================"
+                send_request_to_google_analytics(utm_track)
+            except:
+                print "============================  CANNOT POST APP LAUNCH TRACK EVENT ============================"
+
+                
 
 #      addDir('name','url','mode','iconimage','description') mode is where it tells the plugin where to go scroll to bottom to see where mode is
 def CATEGORIES():
         addDir('HD Movies','structure_HD_movies',4,hdicon,'HD Movies')
         addDir('DivX Movies','structure_divx_movies',3,divxicon,'DivX Movies')
         addDir('Flash Movies','structure_flash_movies',6,flashicon,'Flash Movies')
+        addDir('Pre-Retail','structure_preretail',16,icon,'Pre-Retail')
         addDir('Search','structure_search(url)',10,searchicon,'Search')
         addDir('HD TV Shows','structure_HD_TV',7,icon,'HD TV Shows')
         addDir('DivX TV Shows','structure_divx_TV',8,icon,'DivX TV Shows')
         addDir('Flash TV Shows','structure_flash_TV',9,icon,'Flash TV Shows')
+        #addDir('Resolver Test','test_resolve',15,'','Test_Resolver')
         setView('movies', 'default')
-        #setView is setting the automatic view.....first is what section "movies"......second is what you called it in the settings xml  
+        #setView is setting the automatic view.....first is what section "movies"......second is what you called it in the settings xml
+
+def test_resolve():
+        keyboard = xbmc.Keyboard('http://180upload.com/zu245lp07707')
+        keyboard.doModal()
+        url = keyboard.getText()
+        name = 'test'
+        PLAY(name,url)
+        
+    
                 
 def nextdirectory(url):
         link=OPEN_URL(url)
@@ -149,7 +215,7 @@ def nextdirectory(url):
         if match:
             for name, url in match:
                 addDir(name,url,1,'','')
-        match=re.compile('href="(.+?)" title=.+? class=.+?>(.+?)</a>').findall(link)
+        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation|.+no\-dvd\-rips\-here\-please\-read|.+pre\-retail\-mkv\-mp4\-h264\-topic\-guidelines)).+?)" title=.+? class=.+?>(.+?)</a>').findall(link)
         for url, name in match:
                 addDir(name,url,2,'','')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
@@ -163,7 +229,7 @@ def nextdirectorytv(url):
         if match:
             for name, url in match:
                 addDir(name,url,14,'','')
-        match=re.compile('href="(.+?)" title=.+? class=.+?>((?!(?:Posting)).+?)</a>').findall(link)
+        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)" title=.+? class=.+?>((?!(?:Posting)).+?)</a>').findall(link)
         for url, name in match:
                 addDir(name,url,12,'','')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
@@ -171,23 +237,6 @@ def nextdirectorytv(url):
             for name, url in match:
                 addDir(name,url,14,'','')
 
-#def imdb(url):
-#    print 'URL: '+url
-#    req = urllib2.Request(url)
-#    req.add_header('User-Agent', ' Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-#    response = urllib2.urlopen(req)
-#    link=OPEN_URL(url)
-#    response.close()
-#    match=re.compile('''<a href='http://www.imdb.com/title/(.+?)/' class='bbc_url''').findall(link)
-#    url = 'http://www.imdb.com/title/'+match[0]
-#    req = urllib2.Request(url)
-#    req.add_header('User-Agent', ' Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-#    response = urllib2.urlopen(req)
-#    link=response.read()
-#    response.close()
-#    imdbinfo=re.compile('''<span class="star-box-rating-label">Your rating:</span>.<div class="rating rating-list" data-starbar-class="rating-list" data-auth="" data-user="" id=".+?" data-ga-identifier="".title="(.+?) - click stars to rate">.+?<p itemprop="description">(.+?)</p>''', re.DOTALL).findall(link)
-#    print 'BLERB: '+str(imdbinfo)
-#    return imdbinfo
    
 def nextdirectory_nextdirectory(url): #links
         link=OPEN_URL(url)
@@ -195,16 +244,8 @@ def nextdirectory_nextdirectory(url): #links
         if match:
             for name, url in match:
                 addDir(name,url,2,'','')
-        #imdb(url)
-        #blerb = str(imdb(url))
-        #print 'BLURB TRACE: '+str(imdb(url))
-        #listitem = xbmcgui.ListItem(str(imdb(url))
-        link=link.replace("rel='external'>http://www.imdb.com",'')
         cover=re.compile('''<img src='(.+?)' alt='Posted Image' class='bbc_img' />''').findall(link)
-        link=link.replace("rel='external'>http://i.imgur.com",'')
-        link=link.replace("rel='external'>http://s11.postimage",'')
-        link=link.replace("<a href='http://nfomation.net",'')
-        match=re.compile('''<a href='(.+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?(.+?)\..+?</a''').findall(link)
+        match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?(.+?)\..+?</a''').findall(link)
         match.reverse()
         for url, name in match:
                 addDir(name,url,5,cover[0],'')
@@ -222,8 +263,6 @@ def structure_search(url):
         response.close()
         match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
-            print 'MATCH: '+str(match)
-            print 'URL: '+str(url)
             for name, url in match:
                 addDir(name,url,11,'','')
         go = 'search'
@@ -232,16 +271,13 @@ def structure_search(url):
         if keyboard.isConfirmed():
             search = keyboard.getText()
             search = search.replace(' ','%20')
-            print 'SEARCH: '+str(search)
             source = 'http://www.dailyflix.net/index.php?app=core&module=search&do=search&search_term='+search
-            print 'SOURCE DONE : '+str(source)
             req = urllib2.Request(source)
             req.add_header('User-Agent', ' Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
             response = urllib2.urlopen(req)
             linkz=response.read()
             response.close()
             results = re.compile("class='ipsBadge ipsBadge_lightgrey'>((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(linkz)
-            print 'RESULTS : '+str(results)
             for name, url, description in results:
                 if "TV" in name:
                     addDir(description+' '+name,url,12,searchicon,'')
@@ -249,8 +285,6 @@ def structure_search(url):
                     addDir(description+' '+name,url,2,searchicon,'')
             match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
             if match:
-                print 'MATCH: '+str(match)
-                print 'URL: '+str(url)
                 for url, name in match:
                     addDir(url,name,11,'','')
 
@@ -258,7 +292,6 @@ def structure_search(url):
             print 'FAILED SEARCH'
 
 def structure_searchpages(url):
-        print 'structure_searchpages'
         url = url.replace('amp;','')
         link=OPEN_URL(url)
         match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
@@ -266,7 +299,6 @@ def structure_searchpages(url):
             for name, url in match:
                 addDir(name,url,11,'','')
         results = re.compile("class='ipsBadge ipsBadge_lightgrey'>((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(link)
-        print 'RESULTS : '+str(results)
         for name, url, description in results:
                 if "TV" in name:
                     addDir(description+' '+name,url,12,searchicon,'')
@@ -279,7 +311,6 @@ def structure_searchpages(url):
 
 def structure_seasons(url):
         link=OPEN_URL(url)
-        print 'URLz: '+url
         match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, urlz in match:
@@ -292,6 +323,22 @@ def structure_seasons(url):
         seasonsix=re.compile('\.([sS]06|6)([eE][0-9][0-9])\.(...............)').findall(link)
         seasonseven=re.compile('\.([sS]07|7)([eE][0-9][0-9])\.(...............)').findall(link)
         seasoneight=re.compile('\.([sS]08|8)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasonnine=re.compile('\.([sS]09|9)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasonten=re.compile('\.([sS]10)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasoneleven=re.compile('\.([sS]11)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasontwelve=re.compile('\.([sS]12)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasonthirteen=re.compile('\.([sS]13)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasonfourteen=re.compile('\.([sS]14)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasonfifteen=re.compile('\.([sS]15)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasonsixteen=re.compile('\.([sS]16)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasonseventeen=re.compile('\.([sS]17)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasoneighteen=re.compile('\.([sS]18)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasonnineteen=re.compile('\.([sS]19)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasontwenty=re.compile('\.([sS]20)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasontwentyone=re.compile('\.([sS]21)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasontwentytwo=re.compile('\.([sS]22)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasontwentythree=re.compile('\.([sS]23)([eE][0-9][0-9])\.(...............)').findall(link)
+        seasontwentyfour=re.compile('\.([sS]24)([eE][0-9][0-9])\.(...............)').findall(link)
         img=re.compile("<span rel='lightbox'><img src='(.+?)' alt='Posted Image' class='bbc_img' />").findall(link)
 
         if img:
@@ -301,7 +348,6 @@ def structure_seasons(url):
             pic=''
         
         if seasonone:
-                print 'Season One :'+str(seasonone)
                 seasonone.sort()
                 for season, episode, tail in seasonone:
                     addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
@@ -341,6 +387,86 @@ def structure_seasons(url):
                 for season, episode, tail in seasoneight:
                     addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
 
+        if seasonnine:
+                seasonnine.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasonten:
+                seasonten.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasoneleven:
+                seasoneleven.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasontwelve:
+                seasontwelve.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasonthirteen:
+                seasonthirteen.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasonfourteen:
+                seasonfourteen.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasonfifteen:
+                seasonfifteen.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasonsixteen:
+                seasonsixteen.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasonseventeen:
+                seasonseventeen.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasoneighteen:
+                seasoneighteen.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasonnineteen:
+                seasonnineteen.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasontwenty:
+                seasontwenty.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasontwentyone:
+                seasontwentyone.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasontwentytwo:
+                seasontwentytwo.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasontwentythree:
+                seasontwentythree.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
+        if seasontwentyfour:
+                seasontwentyfour.sort()
+                for season, episode, tail in seasoneight:
+                    addDir(season+' '+episode,url,13,pic,season+episode+'.'+tail)
+
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, urlz in match:
@@ -348,57 +474,54 @@ def structure_seasons(url):
 
 def structure_episodesone(url):
         link=OPEN_URL(url)
-        print 'URL: '+url
         episodes=re.compile(description+"(.+?)((</div>|</a><br />.<br />))",re.DOTALL).findall(link)
-        print 'EPISODES: '+str(episodes)
-        links=re.compile("<a href='(.+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?(.+?)\..+?</a").findall(str(episodes))
+        links=re.compile("<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?(.+?)\..+?</a").findall(str(episodes))
         links.reverse()
-        print 'LINKS: '+str(links)
         for url, name in links:
             addDir(name,url,5,'','')
         
 
 def structure_divx_movies():
-        addDir('Movies 2012-2013        A-Z','http://www.dailyflix.net/index.php?/forum/49-divx-2012-2013/',1,icon,'DivX Movies 2012-2013 - A-Z')
-        addDir('Movies 2006-2011        A-Z','http://www.dailyflix.net/index.php?/forum/50-divx-2006-2011/',1,icon,'DivX Movies 2006-2011 - A-Z')
-        addDir('Movies 2000-2005        A-Z','http://www.dailyflix.net/index.php?/forum/52-divx-2000-2005/',1,icon,'DivX Movies 2000-2005 - A-Z')
-        addDir('Movies 1990-1999        A-Z','http://www.dailyflix.net/index.php?/forum/55-divx-1990-1999/',1,icon,'DivX Movies 1990-1999 - A-Z')
-        addDir('Movies 1980-1989        A-Z','http://www.dailyflix.net/index.php?/forum/56-divx-1980-1989/',1,icon,'DivX Movies 1980-1999 - A-Z')
-        addDir('Movies Pre 1979         A-Z','http://www.dailyflix.net/index.php?/forum/57-divx-1979-earlier/',1,icon,'DivX Movies Pre 1979  - A-Z')
+        addDir('Movies 2012-2013        A-Z','http://www.dailyflix.net/index.php?/forum/49-divx-2012-2013/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 2012-2013 - A-Z')
+        addDir('Movies 2006-2011        A-Z','http://www.dailyflix.net/index.php?/forum/50-divx-2006-2011/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 2006-2011 - A-Z')
+        addDir('Movies 2000-2005        A-Z','http://www.dailyflix.net/index.php?/forum/52-divx-2000-2005/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 2000-2005 - A-Z')
+        addDir('Movies 1990-1999        A-Z','http://www.dailyflix.net/index.php?/forum/55-divx-1990-1999/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 1990-1999 - A-Z')
+        addDir('Movies 1980-1989        A-Z','http://www.dailyflix.net/index.php?/forum/56-divx-1980-1989/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 1980-1999 - A-Z')
+        addDir('Movies Pre 1979             A-Z','http://www.dailyflix.net/index.php?/forum/57-divx-1979-earlier/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies Pre 1979  - A-Z')
         addDir('Movies 2012-2013        Recently Added','http://www.dailyflix.net/index.php?/forum/49-divx-2012-2013/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://www.dailyflix.net/index.php?/forum/50-divx-2006-2011/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://www.dailyflix.net/index.php?/forum/52-divx-2000-2005/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 2000-2005 - Recently Added')
         addDir('Movies 1990-1999        Recently Added','http://www.dailyflix.net/index.php?/forum/55-divx-1990-1999/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 1990-1999 - Recently Added')
         addDir('Movies 1980-1989        Recently Added','http://www.dailyflix.net/index.php?/forum/56-divx-1980-1989/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 1980-1999 - Recently Added')
-        addDir('Movies Pre 1979         Recently Added','http://www.dailyflix.net/index.php?/forum/57-divx-1979-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies Pre 1979  - Recently Added')        
+        addDir('Movies Pre 1979             Recently Added','http://www.dailyflix.net/index.php?/forum/57-divx-1979-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies Pre 1979  - Recently Added')        
         setView('divxmovies', 'default')
 
 def structure_HD_movies():
-        addDir('Movies 2012-2013        A-Z','http://www.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/',1,icon,'HD Movies 2012-2013 - A-Z')
-        addDir('Movies 2006-2011        A-Z','http://www.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/',1,icon,'HD Movies 2006-2011 - A-Z')
-        addDir('Movies 2000-2005        A-Z','http://www.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/',1,icon,'HD Movies 2000-2005 - A-Z')
-        addDir('Movies 1990-1999        A-Z','http://www.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/',1,icon,'HD Movies 1990-1999 - A-Z')
-        addDir('Movies Pre 1989         A-Z','http://www.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/',1,icon,'HD Movies Pre 1989  - A-Z')
+        addDir('Movies 2012-2013        A-Z','http://www.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies 2012-2013 - A-Z')
+        addDir('Movies 2006-2011        A-Z','http://www.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies 2006-2011 - A-Z')
+        addDir('Movies 2000-2005        A-Z','http://www.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies 2000-2005 - A-Z')
+        addDir('Movies 1990-1999        A-Z','http://www.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies 1990-1999 - A-Z')
+        addDir('Movies Pre 1989             A-Z','http://www.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies Pre 1989  - A-Z')
         addDir('Movies 2012-2013        Recently Added','http://www.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://www.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://www.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies 2000-2005 - Recently Added')
         addDir('Movies 1990-1999        Recently Added','http://www.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies 1990-1999 - Recently Added')
-        addDir('Movies Pre 1989         Recently Added','http://www.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies Pre 1989  - Recently Added')        
+        addDir('Movies Pre 1989             Recently Added','http://www.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies Pre 1989  - Recently Added')        
         setView('divxmovies', 'default')
 
 def structure_flash_movies():
-        addDir('Movies 2012-2013        A-Z','http://www.dailyflix.net/index.php?/forum/64-flash-2012-2013/',1,icon,'Flash Movies 2012-2013 - A-Z')
-        addDir('Movies 2006-2011        A-Z','http://www.dailyflix.net/index.php?/forum/65-flash-2006-2011/',1,icon,'Flash Movies 2006-2011 - A-Z')
-        addDir('Movies 2000-2005        A-Z','http://www.dailyflix.net/index.php?/forum/66-flash-2000-2005/',1,icon,'Flash Movies 2000-2005 - A-Z')
-        addDir('Movies 1990-1999        A-Z','http://www.dailyflix.net/index.php?/forum/67-flash-1990-1999/',1,icon,'Flash Movies 1990-1999 - A-Z')
-        addDir('Movies 1980-1989        A-Z','http://www.dailyflix.net/index.php?/forum/210-flash-1980-1989/',1,icon,'Flash Movies 1980-1999 - A-Z')
-        addDir('Movies Pre 1979         A-Z','http://www.dailyflix.net/index.php?/forum/68-flash-1979-earlier/',1,icon,'Flash Movies Pre 1979  - A-Z')
+        addDir('Movies 2012-2013        A-Z','http://www.dailyflix.net/index.php?/forum/64-flash-2012-2013/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 2012-2013 - A-Z')
+        addDir('Movies 2006-2011        A-Z','http://www.dailyflix.net/index.php?/forum/65-flash-2006-2011/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 2006-2011 - A-Z')
+        addDir('Movies 2000-2005        A-Z','http://www.dailyflix.net/index.php?/forum/66-flash-2000-2005/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 2000-2005 - A-Z')
+        addDir('Movies 1990-1999        A-Z','http://www.dailyflix.net/index.php?/forum/67-flash-1990-1999/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 1990-1999 - A-Z')
+        addDir('Movies 1980-1989        A-Z','http://www.dailyflix.net/index.php?/forum/210-flash-1980-1989/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 1980-1999 - A-Z')
+        addDir('Movies Pre 1979             A-Z','http://www.dailyflix.net/index.php?/forum/68-flash-1979-earlier/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies Pre 1979  - A-Z')
         addDir('Movies 2012-2013        Recently Added','http://www.dailyflix.net/index.php?/forum/64-flash-2012-2013/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://www.dailyflix.net/index.php?/forum/65-flash-2006-2011/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://www.dailyflix.net/index.php?/forum/66-flash-2000-2005/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 2000-2005 - Recently Added')
         addDir('Movies 1990-1999        Recently Added','http://www.dailyflix.net/index.php?/forum/67-flash-1990-1999/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 1990-1999 - Recently Added')
         addDir('Movies 1980-1989        Recently Added','http://www.dailyflix.net/index.php?/forum/210-flash-1980-1989/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 1980-1999 - Recently Added')
-        addDir('Movies Pre 1979         Recently Added','http://www.dailyflix.net/index.php?/forum/68-flash-1979-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies Pre 1979  - Recently Added')        
+        addDir('Movies Pre 1979             Recently Added','http://www.dailyflix.net/index.php?/forum/68-flash-1979-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies Pre 1979  - Recently Added')        
         setView('divxmovies', 'default')
 
 def structure_HD_TV():
@@ -437,31 +560,30 @@ def structure_flash_TV():
         addDir('Cartoons                        Recently Added','http://www.dailyflix.net/index.php?/forum/46-flashflv-cartoons/page__sort_key__last_post__sort_by__Z-A',14,icon,'Flash Cartoons - Recently Added')
         addDir('Kids TV and Cartoons    Recently Added','http://www.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/page__sort_key__last_post__sort_by__Z-A',14,icon,'Flash Kids TV and Cartoons - Recently Added')
 
+def structure_preretail():
+        addDir('Pre-Retail - DivX                   A-Z','http://www.dailyflix.net/index.php?/forum/217-preretail-flix-divx/page__sort_key__title__sort_by__A-Z',1,icon,'Pre-Retail - DivX - A-Z')
+        addDir('Pre-Retail - Flash                  A-Z','http://www.dailyflix.net/index.php?/forum/218-preretail-flix-flash/page__sort_key__title__sort_by__A-Z',1,icon,'Pre-Retail - Flash - A-Z')
+        addDir('Pre-Retail - MKV/MP4        A-Z','http://www.dailyflix.net/index.php?/forum/326-preretail-flix-mkv-mp4-h264/page__sort_key__title__sort_by__A-Z',1,icon,'Pre-Retail - MKV/MP4 - A-Z')
+        addDir('Pre-Retail - DivX                   Recently Added','http://www.dailyflix.net/index.php?/forum/217-preretail-flix-divx/page__sort_key__last_post__sort_by__Z-A',1,icon,'Pre-Retail - DivX - A-Z')
+        addDir('Pre-Retail - Flash                  Recently Added','http://www.dailyflix.net/index.php?/forum/218-preretail-flix-flash/page__sort_key__last_post__sort_by__Z-A',1,icon,'Pre-Retail - Flash - A-Z')
+        addDir('Pre-Retail - MKV/MP4        Recently Added','http://www.dailyflix.net/index.php?/forum/326-preretail-flix-mkv-mp4-h264/page__sort_key__last_post__sort_by__Z-A',1,icon,'Pre-Retail - MKV/MP4 - A-Z')
+
 
 def PLAY(name,url):
-        GA("None","Second Directory")
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
         listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png")
-        #print name
         listitem.setInfo("Video", infoLabels={ "Title": name})
         listitem.setProperty('mimetype', 'video/x-msvideo')
         listitem.setProperty('IsPlayable', 'true')
-        media = urlresolver.HostedMediaFile(url)
-        source = media
-        if source:
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                stream_url = source.resolve()
-                if source.resolve()==False:
-                        xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
-                        return
-        else:
-              stream_url = False  
+        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+        stream_url = urlresolver.HostedMediaFile(url).resolve()
+        if not stream_url:
+                xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
+                return
         playlist.add(stream_url,listitem)
         xbmcPlayer = xbmc.Player()
         xbmcPlayer.play(playlist)
-        #link=OPEN_URL(url)
-        #cover=re.compile('''<img src='(.+?)' alt='Posted Image' class='bbc_img' />''').findall(link)
         addDir('','','','','')
      
 def OPEN_URL(url):
@@ -584,7 +706,7 @@ elif mode==5:
         PLAY(name,url)
 
 elif mode==6:
-        print "structure_flash_movies "+url
+        print "structure_flash_movies "
         structure_flash_movies()
 
 elif mode==7:
@@ -624,6 +746,14 @@ elif mode == 'play':
     if stream_url:
         xbmc.Player(xbmc.PLAYER_CORE_DVDPLAYER).play(stream_url)
         addon.add_directory({'mode': 'play', 'url': url}, {'title': 'Play Again'})
+
+elif mode==15:
+        print "test_resolve"
+        test_resolve()
+
+elif mode==16:
+        print "structure_preretail"
+        structure_preretail()
            
      
            
