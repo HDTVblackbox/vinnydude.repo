@@ -116,7 +116,7 @@ def GA(group,name):
             
         except:
             print "================  CANNOT POST TO ANALYTICS  ================" 
-            
+         
             
 def APP_LAUNCH():
         versionNumber = int(xbmc.getInfoLabel("System.BuildVersion" )[0:2])
@@ -183,7 +183,7 @@ def APP_LAUNCH():
                 send_request_to_google_analytics(utm_track)
             except:
                 print "============================  CANNOT POST APP LAUNCH TRACK EVENT ============================"
-
+checkGA()
                 
 
 #      addDir('name','url','mode','iconimage','description') mode is where it tells the plugin where to go scroll to bottom to see where mode is
