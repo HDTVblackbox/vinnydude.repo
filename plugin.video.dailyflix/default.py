@@ -116,7 +116,7 @@ def GA(group,name):
             
         except:
             print "================  CANNOT POST TO ANALYTICS  ================" 
-            
+checkGA()          
             
 def APP_LAUNCH():
         versionNumber = int(xbmc.getInfoLabel("System.BuildVersion" )[0:2])
