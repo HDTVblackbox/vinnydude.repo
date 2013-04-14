@@ -1,8 +1,0 @@
-v1.1
-Added Preretail directory
-Added support for more than 8 seasons. The most seasons a show ever got was 24!!!
-Updated GA
-Refined a few scrapes to omit links to facebook etc.
-
-v1.0
-Initial Release

@@ -7,7 +7,7 @@ import time
     
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "V1.14"
+VERSION = "V1.15"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -244,7 +244,7 @@ def nextdirectory_nextdirectory(url): #links
         if match:
             for name, url in match:
                 addDir(name,url,2,'','')
-        cover=re.compile('''<img src='(.+?)' alt='Posted Image' class='bbc_img' />''').findall(link)
+        cover=re.compile("src='(.+?)' alt='Posted Image' class='bbc_img'").findall(link)
         match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?(.+?)\..+?</a''').findall(link)
         match.reverse()
         for url, name in match:
