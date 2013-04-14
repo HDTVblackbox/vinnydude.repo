@@ -7,7 +7,7 @@ import time
     
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "V1.13"
+VERSION = "V1.14"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -215,7 +215,7 @@ def nextdirectory(url):
         if match:
             for name, url in match:
                 addDir(name,url,1,'','')
-        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation|.+no\-dvd\-rips\-here\-please\-read|.+pre\-retail\-mkv\-mp4\-h264\-topic\-guidelines)).+?)" title=.+? class=.+?>(.+?)</a>').findall(link)
+        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation|.+no\-dvd\-rips\-here\-please\-read|.+pre\-retail\-mkv\-mp4\-h264\-topic\-guidelines)).+?)" title=\'(.+?) - started').findall(link)
         for url, name in match:
                 addDir(name,url,2,'','')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
@@ -229,7 +229,7 @@ def nextdirectorytv(url):
         if match:
             for name, url in match:
                 addDir(name,url,14,'','')
-        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)" title=.+? class=.+?>((?!(?:Posting)).+?)</a>').findall(link)
+        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)" title=\'(.+?) - started').findall(link)
         for url, name in match:
                 addDir(name,url,12,'','')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
@@ -277,7 +277,7 @@ def structure_search(url):
             response = urllib2.urlopen(req)
             linkz=response.read()
             response.close()
-            results = re.compile("class='ipsBadge ipsBadge_lightgrey'>((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(linkz)
+            results = re.compile("data-tooltip=\".+?\">((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(linkz)
             for name, url, description in results:
                 if "TV" in name:
                     addDir(description+' '+name,url,12,searchicon,'')
@@ -298,7 +298,7 @@ def structure_searchpages(url):
         if match:
             for name, url in match:
                 addDir(name,url,11,'','')
-        results = re.compile("class='ipsBadge ipsBadge_lightgrey'>((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(link)
+        results = re.compile("data-tooltip=\".+?\">((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(link)
         for name, url, description in results:
                 if "TV" in name:
                     addDir(description+' '+name,url,12,searchicon,'')
@@ -482,91 +482,91 @@ def structure_episodesone(url):
         
 
 def structure_divx_movies():
-        addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/49-divx-2012-2013/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 2012-2013 - A-Z')
-        addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/50-divx-2006-2011/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 2006-2011 - A-Z')
-        addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/52-divx-2000-2005/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 2000-2005 - A-Z')
-        addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/55-divx-1990-1999/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 1990-1999 - A-Z')
-        addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/56-divx-1980-1989/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies 1980-1999 - A-Z')
-        addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/57-divx-1979-earlier/page__sort_key__title__sort_by__A-Z',1,icon,'DivX Movies Pre 1979  - A-Z')
-        addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/49-divx-2012-2013/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 2012-2013 - Recently Added')
-        addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/50-divx-2006-2011/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 2006-2011 - Recently Added')
-        addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/52-divx-2000-2005/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 2000-2005 - Recently Added')
-        addDir('Movies 1990-1999        Recently Added','http://board.dailyflix.net/index.php?/forum/55-divx-1990-1999/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 1990-1999 - Recently Added')
-        addDir('Movies 1980-1989        Recently Added','http://board.dailyflix.net/index.php?/forum/56-divx-1980-1989/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies 1980-1999 - Recently Added')
-        addDir('Movies Pre 1979             Recently Added','http://board.dailyflix.net/index.php?/forum/57-divx-1979-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'DivX Movies Pre 1979  - Recently Added')        
+        addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/49-divx-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2012-2013 - A-Z')
+        addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/50-divx-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2006-2011 - A-Z')
+        addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/52-divx-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2000-2005 - A-Z')
+        addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/55-divx-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 1990-1999 - A-Z')
+        addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/56-divx-1980-1989/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 1980-1999 - A-Z')
+        addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/57-divx-1979-earlier/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies Pre 1979  - A-Z')
+        addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/49-divx-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2012-2013 - Recently Added')
+        addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/50-divx-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2006-2011 - Recently Added')
+        addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/52-divx-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2000-2005 - Recently Added')
+        addDir('Movies 1990-1999        Recently Added','http://board.dailyflix.net/index.php?/forum/55-divx-1990-1999/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 1990-1999 - Recently Added')
+        addDir('Movies 1980-1989        Recently Added','http://board.dailyflix.net/index.php?/forum/56-divx-1980-1989/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 1980-1999 - Recently Added')
+        addDir('Movies Pre 1979             Recently Added','http://board.dailyflix.net/index.php?/forum/57-divx-1979-earlier/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies Pre 1979  - Recently Added')        
         setView('divxmovies', 'default')
 
 def structure_HD_movies():
-        addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies 2012-2013 - A-Z')
-        addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies 2006-2011 - A-Z')
-        addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies 2000-2005 - A-Z')
-        addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies 1990-1999 - A-Z')
-        addDir('Movies Pre 1989             A-Z','http://board.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/page__sort_key__title__sort_by__A-Z',1,icon,'HD Movies Pre 1989  - A-Z')
-        addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies 2012-2013 - Recently Added')
-        addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies 2006-2011 - Recently Added')
-        addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies 2000-2005 - Recently Added')
-        addDir('Movies 1990-1999        Recently Added','http://board.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies 1990-1999 - Recently Added')
-        addDir('Movies Pre 1989             Recently Added','http://board.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'HD Movies Pre 1989  - Recently Added')        
+        addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2012-2013 - A-Z')
+        addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2006-2011 - A-Z')
+        addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2000-2005 - A-Z')
+        addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 1990-1999 - A-Z')
+        addDir('Movies Pre 1989             A-Z','http://board.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies Pre 1989  - A-Z')
+        addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2012-2013 - Recently Added')
+        addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2006-2011 - Recently Added')
+        addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2000-2005 - Recently Added')
+        addDir('Movies 1990-1999        Recently Added','http://board.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 1990-1999 - Recently Added')
+        addDir('Movies Pre 1989             Recently Added','http://board.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies Pre 1989  - Recently Added')        
         setView('divxmovies', 'default')
 
 def structure_flash_movies():
-        addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/64-flash-2012-2013/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 2012-2013 - A-Z')
-        addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/65-flash-2006-2011/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 2006-2011 - A-Z')
-        addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/66-flash-2000-2005/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 2000-2005 - A-Z')
-        addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/67-flash-1990-1999/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 1990-1999 - A-Z')
-        addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/210-flash-1980-1989/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies 1980-1999 - A-Z')
-        addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/68-flash-1979-earlier/page__sort_key__title__sort_by__A-Z',1,icon,'Flash Movies Pre 1979  - A-Z')
-        addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/64-flash-2012-2013/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 2012-2013 - Recently Added')
-        addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/65-flash-2006-2011/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 2006-2011 - Recently Added')
-        addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/66-flash-2000-2005/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 2000-2005 - Recently Added')
-        addDir('Movies 1990-1999        Recently Added','http://board.dailyflix.net/index.php?/forum/67-flash-1990-1999/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 1990-1999 - Recently Added')
-        addDir('Movies 1980-1989        Recently Added','http://board.dailyflix.net/index.php?/forum/210-flash-1980-1989/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies 1980-1999 - Recently Added')
-        addDir('Movies Pre 1979             Recently Added','http://board.dailyflix.net/index.php?/forum/68-flash-1979-earlier/page__sort_key__last_post__sort_by__Z-A',1,icon,'Flash Movies Pre 1979  - Recently Added')        
+        addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/64-flash-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2012-2013 - A-Z')
+        addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/65-flash-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2006-2011 - A-Z')
+        addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/66-flash-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2000-2005 - A-Z')
+        addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/67-flash-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 1990-1999 - A-Z')
+        addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/210-flash-1980-1989/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 1980-1999 - A-Z')
+        addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/68-flash-1979-earlier/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies Pre 1979  - A-Z')
+        addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/64-flash-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2012-2013 - Recently Added')
+        addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/65-flash-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2006-2011 - Recently Added')
+        addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/66-flash-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2000-2005 - Recently Added')
+        addDir('Movies 1990-1999        Recently Added','http://board.dailyflix.net/index.php?/forum/67-flash-1990-1999/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 1990-1999 - Recently Added')
+        addDir('Movies 1980-1989        Recently Added','http://board.dailyflix.net/index.php?/forum/210-flash-1980-1989/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 1980-1999 - Recently Added')
+        addDir('Movies Pre 1979             Recently Added','http://board.dailyflix.net/index.php?/forum/68-flash-1979-earlier/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies Pre 1979  - Recently Added')        
         setView('divxmovies', 'default')
 
 def structure_HD_TV():
-        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/page__sort_key__title__sort_by__A-Z',14,icon,'HD General TV - A-Z')
-        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/page__sort_key__title__sort_by__A-Z',14,icon,'HD Comedy - A-Z')
-        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/page__sort_key__title__sort_by__A-Z',14,icon,'HD Sci-Fi/Fantasy/Horror - A-Z')
-        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/page__sort_key__title__sort_by__A-Z',14,icon,'HD Cartoons - A-Z')
-        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/page__sort_key__title__sort_by__A-Z',14,icon,'HD Kids TV and Cartoons - A-Z')
-        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/page__sort_key__last_post__sort_by__Z-A',14,icon,'HD General TV - Recently Added')
-        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/page__sort_key__last_post__sort_by__Z-A',14,icon,'HD Comedy - Recently Added')
-        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/page__sort_key__last_post__sort_by__Z-A',14,icon,'HD Sci-Fi/Fantasy/Horror - Recently Added')
-        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/page__sort_key__last_post__sort_by__Z-A',14,icon,'HD Cartoons - Recently Added')
-        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/page__sort_key__last_post__sort_by__Z-A',14,icon,'HD Kids TV and Cartoons - Recently Added')
+        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'HD General TV - A-Z')
+        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/?sort_key=title&sort_by=A-Z',14,icon,'HD Comedy - A-Z')
+        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'HD Sci-Fi/Fantasy/Horror - A-Z')
+        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'HD Cartoons - A-Z')
+        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'HD Kids TV and Cartoons - A-Z')
+        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'HD General TV - Recently Added')
+        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Comedy - Recently Added')
+        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Sci-Fi/Fantasy/Horror - Recently Added')
+        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Cartoons - Recently Added')
+        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Kids TV and Cartoons - Recently Added')
 
 def structure_divx_TV():
-        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/page__sort_key__title__sort_by__A-Z',14,icon,'DivX General TV - A-Z')
-        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/page__sort_key__title__sort_by__A-Z',14,icon,'DivX Comedy - A-Z')
-        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/page__sort_key__title__sort_by__A-Z',14,icon,'DivX Sci-Fi/Fantasy/Horror - A-Z')
-        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/page__sort_key__title__sort_by__A-Z',14,icon,'DivX Cartoons - A-Z')
-        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/page__sort_key__title__sort_by__A-Z',14,icon,'DivX Kids TV and Cartoons - A-Z')
-        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/page__sort_key__last_post__sort_by__Z-A',14,icon,'DivX General TV - Recently Added')
-        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/page__sort_key__last_post__sort_by__Z-A',14,icon,'DivX Comedy - Recently Added')
-        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/page__sort_key__last_post__sort_by__Z-A',14,icon,'DivX Sci-Fi/Fantasy/Horror - Recently Added')
-        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/page__sort_key__last_post__sort_by__Z-A',14,icon,'DivX Cartoons - Recently Added')
-        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/page__sort_key__last_post__sort_by__Z-A',14,icon,'DivX Kids TV and Cartoons - Recently Added')
+        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'DivX General TV - A-Z')
+        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/?sort_key=title&sort_by=A-Z',14,icon,'DivX Comedy - A-Z')
+        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'DivX Sci-Fi/Fantasy/Horror - A-Z')
+        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'DivX Cartoons - A-Z')
+        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'DivX Kids TV and Cartoons - A-Z')
+        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX General TV - Recently Added')
+        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Comedy - Recently Added')
+        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Sci-Fi/Fantasy/Horror - Recently Added')
+        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Cartoons - Recently Added')
+        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Kids TV and Cartoons - Recently Added')
 
 def structure_flash_TV():
-        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/page__sort_key__title__sort_by__A-Z',14,icon,'Flash General TV - A-Z')
-        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/page__sort_key__title__sort_by__A-Z',14,icon,'Flash Comedy - A-Z')
-        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/page__sort_key__title__sort_by__A-Z',14,icon,'Flash Sci-Fi/Fantasy/Horror - A-Z')
-        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/page__sort_key__title__sort_by__A-Z',14,icon,'Flash Cartoons - A-Z')
-        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/page__sort_key__title__sort_by__A-Z',14,icon,'Flash Kids TV and Cartoons - A-Z')
-        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/page__sort_key__last_post__sort_by__Z-A',14,icon,'Flash General TV - Recently Added')
-        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/page__sort_key__last_post__sort_by__Z-A',14,icon,'Flash Comedy - Recently Added')
-        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/page__sort_key__last_post__sort_by__Z-A',14,icon,'Flash Sci-Fi/Fantasy/Horror - Recently Added')
-        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/page__sort_key__last_post__sort_by__Z-A',14,icon,'Flash Cartoons - Recently Added')
-        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/page__sort_key__last_post__sort_by__Z-A',14,icon,'Flash Kids TV and Cartoons - Recently Added')
+        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'Flash General TV - A-Z')
+        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/?sort_key=title&sort_by=A-Z',14,icon,'Flash Comedy - A-Z')
+        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'Flash Sci-Fi/Fantasy/Horror - A-Z')
+        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Flash Cartoons - A-Z')
+        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Flash Kids TV and Cartoons - A-Z')
+        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash General TV - Recently Added')
+        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Comedy - Recently Added')
+        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Sci-Fi/Fantasy/Horror - Recently Added')
+        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Cartoons - Recently Added')
+        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Kids TV and Cartoons - Recently Added')
 
 def structure_preretail():
-        addDir('Pre-Retail - DivX                   A-Z','http://board.dailyflix.net/index.php?/forum/217-preretail-flix-divx/page__sort_key__title__sort_by__A-Z',1,icon,'Pre-Retail - DivX - A-Z')
-        addDir('Pre-Retail - Flash                  A-Z','http://board.dailyflix.net/index.php?/forum/218-preretail-flix-flash/page__sort_key__title__sort_by__A-Z',1,icon,'Pre-Retail - Flash - A-Z')
-        addDir('Pre-Retail - MKV/MP4        A-Z','http://board.dailyflix.net/index.php?/forum/326-preretail-flix-mkv-mp4-h264/page__sort_key__title__sort_by__A-Z',1,icon,'Pre-Retail - MKV/MP4 - A-Z')
-        addDir('Pre-Retail - DivX                   Recently Added','http://board.dailyflix.net/index.php?/forum/217-preretail-flix-divx/page__sort_key__last_post__sort_by__Z-A',1,icon,'Pre-Retail - DivX - A-Z')
-        addDir('Pre-Retail - Flash                  Recently Added','http://board.dailyflix.net/index.php?/forum/218-preretail-flix-flash/page__sort_key__last_post__sort_by__Z-A',1,icon,'Pre-Retail - Flash - A-Z')
-        addDir('Pre-Retail - MKV/MP4        Recently Added','http://board.dailyflix.net/index.php?/forum/326-preretail-flix-mkv-mp4-h264/page__sort_key__last_post__sort_by__Z-A',1,icon,'Pre-Retail - MKV/MP4 - A-Z')
+        addDir('Pre-Retail - DivX                   A-Z','http://board.dailyflix.net/index.php?/forum/217-preretail-flix-divx/?sort_key=title&sort_by=A-Z',1,icon,'Pre-Retail - DivX - A-Z')
+        addDir('Pre-Retail - Flash                  A-Z','http://board.dailyflix.net/index.php?/forum/218-preretail-flix-flash/?sort_key=title&sort_by=A-Z',1,icon,'Pre-Retail - Flash - A-Z')
+        addDir('Pre-Retail - MKV/MP4        A-Z','http://board.dailyflix.net/index.php?/forum/326-preretail-flix-mkv-mp4-h264/?sort_key=title&sort_by=A-Z',1,icon,'Pre-Retail - MKV/MP4 - A-Z')
+        addDir('Pre-Retail - DivX                   Recently Added','http://board.dailyflix.net/index.php?/forum/217-preretail-flix-divx/?sort_key=last_post&sort_by=Z-A',1,icon,'Pre-Retail - DivX - A-Z')
+        addDir('Pre-Retail - Flash                  Recently Added','http://board.dailyflix.net/index.php?/forum/218-preretail-flix-flash/?sort_key=last_post&sort_by=Z-A',1,icon,'Pre-Retail - Flash - A-Z')
+        addDir('Pre-Retail - MKV/MP4        Recently Added','http://board.dailyflix.net/index.php?/forum/326-preretail-flix-mkv-mp4-h264/?sort_key=last_post&sort_by=Z-A',1,icon,'Pre-Retail - MKV/MP4 - A-Z')
 
 
 def PLAY(name,url):
