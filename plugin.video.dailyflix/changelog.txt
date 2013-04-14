@@ -1,3 +1,9 @@
+v1.13
+Site Updates
+
+v1.11
+GA update
+
 v1.1
 Added Preretail directory
 Added support for more than 8 seasons. The most seasons a show ever got was 24!!!
