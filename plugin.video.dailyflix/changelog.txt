@@ -1,3 +1,7 @@
+v1.16
+Fixed prev/next in search results
+GA Update
+
 v1.15
 Site Updates
 

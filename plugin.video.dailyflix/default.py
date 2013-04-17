@@ -4,10 +4,13 @@ from t0mm0.common.net import Net
 import datetime
 import time
 
-    
+ADDON = xbmcaddon.Addon(id='plugin.video.dailyflix')
+net = Net()
+img = ''
+
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "V1.15"
+VERSION = "1.16"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -15,13 +18,9 @@ hdicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/My-Videos-icon.p
 flashicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Macromedia-Flash-icon.png'
 searchicon = 'http://icons.iconarchive.com/icons/iconleak/atrous/256/search-icon.png'
      
-ADDON = xbmcaddon.Addon(id='plugin.video.dailyflix')
-net = Net()
-img = ''
-
-if ADDON.getSetting('ga_visitor')=='':
+if ADDON.getSetting('visitor_ga')=='':
     from random import randint
-    ADDON.setSetting('ga_visitor',str(randint(0, 0x7fffffff)))
+    ADDON.setSetting('visitor_ga',str(randint(0, 0x7fffffff)))
 
 def parseDate(dateString):
     try:
@@ -183,8 +182,7 @@ def APP_LAUNCH():
                 send_request_to_google_analytics(utm_track)
             except:
                 print "============================  CANNOT POST APP LAUNCH TRACK EVENT ============================"
-checkGA()
-                
+checkGA()                
 
 #      addDir('name','url','mode','iconimage','description') mode is where it tells the plugin where to go scroll to bottom to see where mode is
 def CATEGORIES():
@@ -255,16 +253,8 @@ def nextdirectory_nextdirectory(url): #links
                 addDir(name,url,2,'','')
 
 def structure_search(url):
-        url = 'http://board.dailyflix.net/index.php'
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', ' Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        response = urllib2.urlopen(req)
-        link=response.read()
-        response.close()
-        match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
-        if match:
-            for name, url in match:
-                addDir(name,url,11,'','')
+        url = OPEN_URL('http://board.dailyflix.net/index.php')
+
         go = 'search'
         keyboard = xbmc.Keyboard('')
         keyboard.doModal()
@@ -272,18 +262,18 @@ def structure_search(url):
             search = keyboard.getText()
             search = search.replace(' ','%20')
             source = 'http://board.dailyflix.net/index.php?app=core&module=search&do=search&search_term='+search
-            req = urllib2.Request(source)
-            req.add_header('User-Agent', ' Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-            response = urllib2.urlopen(req)
-            linkz=response.read()
-            response.close()
+            linkz=OPEN_URL(source)
+            match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(linkz) #prev/next page
+            if match:
+                for name, url in match:
+                    addDir(name,url,11,'','')
             results = re.compile("data-tooltip=\".+?\">((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(linkz)
             for name, url, description in results:
                 if "TV" in name:
                     addDir(description+' '+name,url,12,searchicon,'')
                 else:
                     addDir(description+' '+name,url,2,searchicon,'')
-            match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
+            match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(linkz) #prev/next page
             if match:
                 for url, name in match:
                     addDir(url,name,11,'','')
@@ -570,6 +560,7 @@ def structure_preretail():
 
 
 def PLAY(name,url):
+        GA('Playing :',name)
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
         listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png")
