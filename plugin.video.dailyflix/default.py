@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.16"
+VERSION = "1.17"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -191,9 +191,10 @@ def CATEGORIES():
         addDir('Flash Movies','structure_flash_movies',6,flashicon,'Flash Movies')
         addDir('Pre-Retail','structure_preretail',16,icon,'Pre-Retail')
         addDir('Search','structure_search(url)',10,searchicon,'Search')
-        addDir('HD TV Shows','structure_HD_TV',7,icon,'HD TV Shows')
-        addDir('DivX TV Shows','structure_divx_TV',8,icon,'DivX TV Shows')
-        addDir('Flash TV Shows','structure_flash_TV',9,icon,'Flash TV Shows')
+        addDir('TV Shows','tv_shows()',17,icon,'TV Shows')
+        #addDir('HD TV Shows','structure_HD_TV',7,icon,'HD TV Shows')
+        #addDir('DivX TV Shows','structure_divx_TV',8,icon,'DivX TV Shows')
+        #addDir('Flash TV Shows','structure_flash_TV',9,icon,'Flash TV Shows')
         #addDir('Resolver Test','test_resolve',15,'','Test_Resolver')
         setView('movies', 'default')
         #setView is setting the automatic view.....first is what section "movies"......second is what you called it in the settings xml
@@ -227,7 +228,7 @@ def nextdirectorytv(url):
         if match:
             for name, url in match:
                 addDir(name,url,14,'','')
-        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)" title=\'(.+?) - started').findall(link)
+        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)" title=\'((?!(?:Posting New Topics)).+?) - started').findall(link)
         for url, name in match:
                 addDir(name,url,12,'','')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
@@ -514,41 +515,41 @@ def structure_flash_movies():
         addDir('Movies Pre 1979             Recently Added','http://board.dailyflix.net/index.php?/forum/68-flash-1979-earlier/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies Pre 1979  - Recently Added')        
         setView('divxmovies', 'default')
 
-def structure_HD_TV():
-        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'HD General TV - A-Z')
-        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/?sort_key=title&sort_by=A-Z',14,icon,'HD Comedy - A-Z')
-        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'HD Sci-Fi/Fantasy/Horror - A-Z')
-        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'HD Cartoons - A-Z')
-        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'HD Kids TV and Cartoons - A-Z')
-        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'HD General TV - Recently Added')
-        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Comedy - Recently Added')
-        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Sci-Fi/Fantasy/Horror - Recently Added')
-        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Cartoons - Recently Added')
-        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Kids TV and Cartoons - Recently Added')
+#def structure_HD_TV():
+#        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'HD General TV - A-Z')
+#        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/?sort_key=title&sort_by=A-Z',14,icon,'HD Comedy - A-Z')
+#        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'HD Sci-Fi/Fantasy/Horror - A-Z')
+#        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'HD Cartoons - A-Z')
+#        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'HD Kids TV and Cartoons - A-Z')
+#        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'HD General TV - Recently Added')
+#        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Comedy - Recently Added')
+#        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Sci-Fi/Fantasy/Horror - Recently Added')
+#        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Cartoons - Recently Added')
+#        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Kids TV and Cartoons - Recently Added')
 
-def structure_divx_TV():
-        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'DivX General TV - A-Z')
-        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/?sort_key=title&sort_by=A-Z',14,icon,'DivX Comedy - A-Z')
-        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'DivX Sci-Fi/Fantasy/Horror - A-Z')
-        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'DivX Cartoons - A-Z')
-        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'DivX Kids TV and Cartoons - A-Z')
-        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX General TV - Recently Added')
-        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Comedy - Recently Added')
-        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Sci-Fi/Fantasy/Horror - Recently Added')
-        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Cartoons - Recently Added')
-        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Kids TV and Cartoons - Recently Added')
+#def structure_divx_TV():
+#        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'DivX General TV - A-Z')
+#        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/?sort_key=title&sort_by=A-Z',14,icon,'DivX Comedy - A-Z')
+#        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'DivX Sci-Fi/Fantasy/Horror - A-Z')
+#        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'DivX Cartoons - A-Z')
+#        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'DivX Kids TV and Cartoons - A-Z')
+#        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX General TV - Recently Added')
+#        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Comedy - Recently Added')
+#        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Sci-Fi/Fantasy/Horror - Recently Added')
+#        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Cartoons - Recently Added')
+#        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Kids TV and Cartoons - Recently Added')
 
-def structure_flash_TV():
-        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'Flash General TV - A-Z')
-        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/?sort_key=title&sort_by=A-Z',14,icon,'Flash Comedy - A-Z')
-        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'Flash Sci-Fi/Fantasy/Horror - A-Z')
-        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Flash Cartoons - A-Z')
-        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Flash Kids TV and Cartoons - A-Z')
-        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash General TV - Recently Added')
-        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Comedy - Recently Added')
-        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Sci-Fi/Fantasy/Horror - Recently Added')
-        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Cartoons - Recently Added')
-        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Kids TV and Cartoons - Recently Added')
+#def structure_flash_TV():
+#        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'Flash General TV - A-Z')
+#        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/?sort_key=title&sort_by=A-Z',14,icon,'Flash Comedy - A-Z')
+#        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'Flash Sci-Fi/Fantasy/Horror - A-Z')
+#        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Flash Cartoons - A-Z')
+#        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Flash Kids TV and Cartoons - A-Z')
+#        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash General TV - Recently Added')
+#        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Comedy - Recently Added')
+#        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Sci-Fi/Fantasy/Horror - Recently Added')
+#        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Cartoons - Recently Added')
+#        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Kids TV and Cartoons - Recently Added')
 
 def structure_preretail():
         addDir('Pre-Retail - DivX                   A-Z','http://board.dailyflix.net/index.php?/forum/217-preretail-flix-divx/?sort_key=title&sort_by=A-Z',1,icon,'Pre-Retail - DivX - A-Z')
@@ -558,7 +559,21 @@ def structure_preretail():
         addDir('Pre-Retail - Flash                  Recently Added','http://board.dailyflix.net/index.php?/forum/218-preretail-flix-flash/?sort_key=last_post&sort_by=Z-A',1,icon,'Pre-Retail - Flash - A-Z')
         addDir('Pre-Retail - MKV/MP4        Recently Added','http://board.dailyflix.net/index.php?/forum/326-preretail-flix-mkv-mp4-h264/?sort_key=last_post&sort_by=Z-A',1,icon,'Pre-Retail - MKV/MP4 - A-Z')
 
+def tv_shows():
+        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/35-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'General TV - A-Z')
+        addDir('Reality/Talk Shows/Awards       A-Z','http://board.dailyflix.net/index.php?/forum/29-reality-tv-talk-shows-and-award-shows/?sort_key=title&sort_by=A-Z',14,icon,'Reality/Talk Shows/Awards - A-Z')
+        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/30-comedy/?sort_key=title&sort_by=A-Z',14,icon,'Comedy - A-Z')
+        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/31-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'Sci-Fi/Fantasy/Horror - A-Z')
+        addDir('Teen Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/32-teen-oriented-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Teen Cartoons - A-Z')
+        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/33-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Kids TV and Cartoons - A-Z')
 
+        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/35-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'General TV - Recently Added')
+        addDir('Reality/Talk Shows/Awards       Recently Added','http://board.dailyflix.net/index.php?/forum/29-reality-tv-talk-shows-and-award-shows/?sort_key=last_post&sort_by=Z-A',14,icon,'Reality/Talk Shows/Awards - Recently Added')
+        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/30-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'Comedy - Recently Added')
+        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/31-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'Sci-Fi/Fantasy/Horror - Recently Added')
+        addDir('Teen Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/32-teen-oriented-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Teen Cartoons - Recently Added')
+        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/33-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Kids TV and Cartoons - Recently Added')
+        
 def PLAY(name,url):
         GA('Playing :',name)
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
@@ -745,6 +760,10 @@ elif mode==15:
 elif mode==16:
         print "structure_preretail"
         structure_preretail()
+
+elif mode==17:
+        print "TV_shows"
+        tv_shows()
            
      
            

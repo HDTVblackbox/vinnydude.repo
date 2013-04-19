@@ -1,3 +1,6 @@
+v1.17
+Fixed Tv Shows with another site update (All formats have been merged)
+
 v1.16
 Fixed prev/next in search results
 GA Update
