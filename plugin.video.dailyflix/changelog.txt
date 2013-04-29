@@ -1,3 +1,6 @@
+v1.18
+Sorted some regex oddities
+
 v1.17
 Fixed Tv Shows with another site update (All formats have been merged)
 

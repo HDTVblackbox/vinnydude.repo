@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.17"
+VERSION = "1.18"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -228,7 +228,7 @@ def nextdirectorytv(url):
         if match:
             for name, url in match:
                 addDir(name,url,14,'','')
-        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)" title=\'((?!(?:Posting New Topics)).+?) - started').findall(link)
+        match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)" title=\'((?!(?:Please Read Before Posting Any New Topics or Posts in the TV Forums)).+?) - started').findall(link)
         for url, name in match:
                 addDir(name,url,12,'','')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
@@ -244,7 +244,7 @@ def nextdirectory_nextdirectory(url): #links
             for name, url in match:
                 addDir(name,url,2,'','')
         cover=re.compile("src='(.+?)' alt='Posted Image' class='bbc_img'").findall(link)
-        match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?(.+?)\..+?</a''').findall(link)
+        match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?((?!nfomation).+?)\..+?</a''').findall(link)
         match.reverse()
         for url, name in match:
                 addDir(name,url,5,cover[0],'')
