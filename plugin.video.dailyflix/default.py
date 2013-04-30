@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.18"
+VERSION = "1.19"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -244,6 +244,8 @@ def nextdirectory_nextdirectory(url): #links
             for name, url in match:
                 addDir(name,url,2,'','')
         cover=re.compile("src='(.+?)' alt='Posted Image' class='bbc_img'").findall(link)
+        if not cover:
+            cover=re.compile("img class='bbc_img' src=\"(.+?)\" alt=\".+?\"").findall(link)
         match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?((?!nfomation).+?)\..+?</a''').findall(link)
         match.reverse()
         for url, name in match:
