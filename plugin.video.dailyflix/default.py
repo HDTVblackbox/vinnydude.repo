@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.19"
+VERSION = "1.2"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -243,9 +243,11 @@ def nextdirectory_nextdirectory(url): #links
         if match:
             for name, url in match:
                 addDir(name,url,2,'','')
-        cover=re.compile("src='(.+?)' alt='Posted Image' class='bbc_img'").findall(link)
+        cover=re.compile("img src='(.+?)' alt='Posted Image' class='bbc_img'>").findall(link)
         if not cover:
-            cover=re.compile("img class='bbc_img' src=\"(.+?)\" alt=\".+?\"").findall(link)
+            cover=re.compile("img class='bbc_img' src=(?:\"|\')(.+?)(?:\"|\') alt=(?:\"|\').+?(?:\"|\')").findall(link)
+            if not cover:
+                cover = ['']
         match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?((?!nfomation).+?)\..+?</a''').findall(link)
         match.reverse()
         for url, name in match:
@@ -332,13 +334,12 @@ def structure_seasons(url):
         seasontwentytwo=re.compile('\.([sS]22)([eE][0-9][0-9])\.(...............)').findall(link)
         seasontwentythree=re.compile('\.([sS]23)([eE][0-9][0-9])\.(...............)').findall(link)
         seasontwentyfour=re.compile('\.([sS]24)([eE][0-9][0-9])\.(...............)').findall(link)
-        img=re.compile("<span rel='lightbox'><img src='(.+?)' alt='Posted Image' class='bbc_img' />").findall(link)
-
-        if img:
-            pic=img[0]
-
-        else:
-            pic=''
+        cover=re.compile("img src='(.+?)' alt='Posted Image' class='bbc_img'>").findall(link)
+        if not cover:
+            cover=re.compile("img class='bbc_img' src=(?:\"|\')(.+?)(?:\"|\') alt=(?:\"|\').+?(?:\"|\')").findall(link)
+            if not cover:
+                cover = ['']
+        pic=cover[0]
         
         if seasonone:
                 seasonone.sort()
@@ -562,19 +563,19 @@ def structure_preretail():
         addDir('Pre-Retail - MKV/MP4        Recently Added','http://board.dailyflix.net/index.php?/forum/326-preretail-flix-mkv-mp4-h264/?sort_key=last_post&sort_by=Z-A',1,icon,'Pre-Retail - MKV/MP4 - A-Z')
 
 def tv_shows():
-        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/35-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'General TV - A-Z')
+        addDir('General TV                                       A-Z','http://board.dailyflix.net/index.php?/forum/35-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'General TV - A-Z')
         addDir('Reality/Talk Shows/Awards       A-Z','http://board.dailyflix.net/index.php?/forum/29-reality-tv-talk-shows-and-award-shows/?sort_key=title&sort_by=A-Z',14,icon,'Reality/Talk Shows/Awards - A-Z')
-        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/30-comedy/?sort_key=title&sort_by=A-Z',14,icon,'Comedy - A-Z')
-        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/31-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'Sci-Fi/Fantasy/Horror - A-Z')
-        addDir('Teen Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/32-teen-oriented-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Teen Cartoons - A-Z')
-        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/33-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Kids TV and Cartoons - A-Z')
+        addDir('Comedy                                            A-Z','http://board.dailyflix.net/index.php?/forum/30-comedy/?sort_key=title&sort_by=A-Z',14,icon,'Comedy - A-Z')
+        addDir('Sci-Fi/Fantasy/Horror                  A-Z','http://board.dailyflix.net/index.php?/forum/31-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'Sci-Fi/Fantasy/Horror - A-Z')
+        addDir('Teen Cartoons                                A-Z','http://board.dailyflix.net/index.php?/forum/32-teen-oriented-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Teen Cartoons - A-Z')
+        addDir('Kids TV and Cartoons                   A-Z','http://board.dailyflix.net/index.php?/forum/33-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Kids TV and Cartoons - A-Z')
 
-        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/35-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'General TV - Recently Added')
+        addDir('General TV                                       Recently Added','http://board.dailyflix.net/index.php?/forum/35-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'General TV - Recently Added')
         addDir('Reality/Talk Shows/Awards       Recently Added','http://board.dailyflix.net/index.php?/forum/29-reality-tv-talk-shows-and-award-shows/?sort_key=last_post&sort_by=Z-A',14,icon,'Reality/Talk Shows/Awards - Recently Added')
-        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/30-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'Comedy - Recently Added')
-        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/31-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'Sci-Fi/Fantasy/Horror - Recently Added')
-        addDir('Teen Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/32-teen-oriented-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Teen Cartoons - Recently Added')
-        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/33-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Kids TV and Cartoons - Recently Added')
+        addDir('Comedy                                            Recently Added','http://board.dailyflix.net/index.php?/forum/30-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'Comedy - Recently Added')
+        addDir('Sci-Fi/Fantasy/Horror                  Recently Added','http://board.dailyflix.net/index.php?/forum/31-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'Sci-Fi/Fantasy/Horror - Recently Added')
+        addDir('Teen Cartoons                                Recently Added','http://board.dailyflix.net/index.php?/forum/32-teen-oriented-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Teen Cartoons - Recently Added')
+        addDir('Kids TV and Cartoons                   Recently Added','http://board.dailyflix.net/index.php?/forum/33-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Kids TV and Cartoons - Recently Added')
         
 def PLAY(name,url):
         GA('Playing :',name)
