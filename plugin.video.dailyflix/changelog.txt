@@ -1,4 +1,4 @@
-v1.2
+v1.20
 Tightened up how the cover art is grabbed so it displays the correct image
 Neatened up a few alignments within the menus
 

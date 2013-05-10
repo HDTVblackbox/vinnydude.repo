@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.2"
+VERSION = "1.20"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
