@@ -1,3 +1,6 @@
+v1.21
+Should automatically install urlresolver on install. (I installed XMBC on my phone and realised I'd not done that yet as Dailyflix gave me a script error when I ran it! :D *facepalm*)
+
 v1.20
 Tightened up how the cover art is grabbed so it displays the correct image
 Neatened up a few alignments within the menus
