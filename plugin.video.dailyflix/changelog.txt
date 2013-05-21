@@ -1,3 +1,6 @@
+v1.23
+Tightened IMDB code
+
 v1.22
 Added support for showing IMDB information
 

@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.22"
+VERSION = "1.23"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -276,7 +276,8 @@ def nextdirectory_nextdirectory(url): #links
                 cover = ['']
         imdbz=re.compile("a href='(http://www.imdb.com/.+?)' class='bbc_url'").findall(link)
         if imdbz:
-            addClick('[COLOR yellow]IMDB Info[/COLOR]',imdbz[0],18,imdbicon,'')
+            imdbz = imdbz[0].replace('/reference', '')
+            addClick('[COLOR yellow]IMDB Info[/COLOR]',imdbz,18,imdbicon,'')
         match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?((?!nfomation).+?)\..+?</a''').findall(link)
         match.reverse()
         for url, name in match:
@@ -340,7 +341,8 @@ def structure_seasons(url):
                 addDir('[B]'+name+'[/B]',urlz,12,'','')
         imdbz=re.compile("a href='(http://www.imdb.com/.+?)' class='bbc_url'").findall(link)
         if imdbz:
-            addClick('[COLOR yellow]IMDB Info[/COLOR]',imdbz[0],18,imdbicon,'')
+            imdbz = imdbz[0].replace('/reference', '')
+            addClick('[COLOR yellow]IMDB Info[/COLOR]',imdbz,18,imdbicon,'')
         seasonone=re.compile('\.([sS]01|1)([eE][0-9][0-9])\.(...............)').findall(link)
         seasontwo=re.compile('\.([sS]02|2)([eE][0-9][0-9])\.(...............)').findall(link)
         seasonthree=re.compile('\.([sS]03|3)([eE][0-9][0-9])\.(...............)').findall(link)
