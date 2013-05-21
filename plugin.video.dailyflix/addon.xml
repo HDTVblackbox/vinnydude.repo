@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.dailyflix"
        name="Dailyflix"
-       version="1.21"
+       version="1.22"
        provider-name="Vinnydude">
   <requires>
     <import addon="xbmc.python" version="2.0"/>
@@ -17,3 +17,4 @@
     <platform>all</platform>
   </extension>
 </addon>
+

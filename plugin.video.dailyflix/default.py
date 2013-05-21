@@ -10,17 +10,42 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.21"
+VERSION = "1.22"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
 hdicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/My-Videos-icon.png'
 flashicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Macromedia-Flash-icon.png'
 searchicon = 'http://icons.iconarchive.com/icons/iconleak/atrous/256/search-icon.png'
+imdbicon = 'http://www.glitterazi.com/wp-content/uploads/2012/11/imdb-e1352114214951.jpeg'
      
 if ADDON.getSetting('visitor_ga')=='':
     from random import randint
     ADDON.setSetting('visitor_ga',str(randint(0, 0x7fffffff)))
+
+class TextBox:
+    WINDOW = 10147
+    CONTROL_LABEL = 1
+    CONTROL_TEXTBOX = 5
+
+    def __init__(self, *args, **kwargs):
+        xbmc.executebuiltin( "ActivateWindow(%d)" % (self.WINDOW))
+        self.win = xbmcgui.Window(self.WINDOW)
+        self.setControls()
+
+
+    def setControls( self ):
+        link=OPEN_URL(url)
+        title = re.findall('<title>(.+?) - IMDb</title>', link)
+        rating = re.findall('title="(.+?) - click stars to rate"', link)
+        description = re.findall('<div class="inline canwrap" itemprop="description">.+?<p>(.+?)<em class="nobr">', link, re.DOTALL)
+        if not description:
+            description = re.findall('<div class="inline canwrap" itemprop="description">.+?<p>(.+?)</p>', link, re.DOTALL)
+        #trailer = re.findall('<a href="(.+?)" class="video-colorbox" data-context="imdb" data-video="vi1168877337" itemprop="trailer">', link)
+        #if not trailer:
+        #    trailer = ''
+        text = title[0]+'\n\n'+rating[0]+'\n'+description[0]
+        self.win.getControl(self.CONTROL_TEXTBOX).setText(text)
 
 def parseDate(dateString):
     try:
@@ -206,35 +231,36 @@ def test_resolve():
         name = 'test'
         PLAY(name,url)
         
-    
+def imdb(url):
+    popup = TextBox()
                 
 def nextdirectory(url):
         link=OPEN_URL(url)
         match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, url in match:
-                addDir(name,url,1,'','')
+                addDir('[B]'+name+'[/B]',url,1,'','')
         match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation|.+no\-dvd\-rips\-here\-please\-read|.+pre\-retail\-mkv\-mp4\-h264\-topic\-guidelines)).+?)" title=\'(.+?) - started').findall(link)
         for url, name in match:
                 addDir(name,url,2,'','')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, url in match:
-                addDir(name,url,1,'','')
+                addDir('[B]'+name+'[/B]',url,1,'','')
 
 def nextdirectorytv(url):
         link=OPEN_URL(url)
         match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, url in match:
-                addDir(name,url,14,'','')
+                addDir('[B]'+name+'[/B]',url,14,'','')
         match=re.compile('href="((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+nfomation)).+?)" title=\'((?!(?:Please Read Before Posting Any New Topics or Posts in the TV Forums)).+?) - started').findall(link)
         for url, name in match:
                 addDir(name,url,12,'','')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, url in match:
-                addDir(name,url,14,'','')
+                addDir('[B]'+name+'[/B]',url,14,'','')
 
    
 def nextdirectory_nextdirectory(url): #links
@@ -242,12 +268,15 @@ def nextdirectory_nextdirectory(url): #links
         match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, url in match:
-                addDir(name,url,2,'','')
+                addDir('[B]'+name+'[/B]',url,2,'','')
         cover=re.compile("img src='(.+?)' alt='Posted Image' class='bbc_img'>").findall(link)
         if not cover:
             cover=re.compile("img class='bbc_img' src=(?:\"|\')(.+?)(?:\"|\') alt=(?:\"|\').+?(?:\"|\')").findall(link)
             if not cover:
                 cover = ['']
+        imdbz=re.compile("a href='(http://www.imdb.com/.+?)' class='bbc_url'").findall(link)
+        if imdbz:
+            addClick('[COLOR yellow]IMDB Info[/COLOR]',imdbz[0],18,imdbicon,'')
         match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?((?!nfomation).+?)\..+?</a''').findall(link)
         match.reverse()
         for url, name in match:
@@ -255,11 +284,10 @@ def nextdirectory_nextdirectory(url): #links
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, url in match:
-                addDir(name,url,2,'','')
+                addDir('[B]'+name+'[/B]',url,2,'','')
 
 def structure_search(url):
         url = OPEN_URL('http://board.dailyflix.net/index.php')
-
         go = 'search'
         keyboard = xbmc.Keyboard('')
         keyboard.doModal()
@@ -271,7 +299,7 @@ def structure_search(url):
             match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(linkz) #prev/next page
             if match:
                 for name, url in match:
-                    addDir(name,url,11,'','')
+                    addDir('[B]'+name+'[/B]',url,11,'','')
             results = re.compile("data-tooltip=\".+?\">((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(linkz)
             for name, url, description in results:
                 if "TV" in name:
@@ -280,8 +308,8 @@ def structure_search(url):
                     addDir(description+' '+name,url,2,searchicon,'')
             match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(linkz) #prev/next page
             if match:
-                for url, name in match:
-                    addDir(url,name,11,'','')
+                for name, url in match:
+                    addDir('[B]'+name+'[/B]',url,11,'','')
 
         else:
             print 'FAILED SEARCH'
@@ -292,7 +320,7 @@ def structure_searchpages(url):
         match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, url in match:
-                addDir(name,url,11,'','')
+                addDir('[B]'+name+'[/B]',url,11,'','')
         results = re.compile("data-tooltip=\".+?\">((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(link)
         for name, url, description in results:
                 if "TV" in name:
@@ -302,14 +330,17 @@ def structure_searchpages(url):
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, url in match:
-                addDir(name,url,11,'','')
+                addDir('[B]'+name+'[/B]',url,11,'','')
 
 def structure_seasons(url):
         link=OPEN_URL(url)
         match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, urlz in match:
-                addDir(name,urlz,12,'','')
+                addDir('[B]'+name+'[/B]',urlz,12,'','')
+        imdbz=re.compile("a href='(http://www.imdb.com/.+?)' class='bbc_url'").findall(link)
+        if imdbz:
+            addClick('[COLOR yellow]IMDB Info[/COLOR]',imdbz[0],18,imdbicon,'')
         seasonone=re.compile('\.([sS]01|1)([eE][0-9][0-9])\.(...............)').findall(link)
         seasontwo=re.compile('\.([sS]02|2)([eE][0-9][0-9])\.(...............)').findall(link)
         seasonthree=re.compile('\.([sS]03|3)([eE][0-9][0-9])\.(...............)').findall(link)
@@ -464,7 +495,7 @@ def structure_seasons(url):
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
             for name, urlz in match:
-                addDir(name,urlz,12,'','')
+                addDir('[B]'+name+'[/B]',urlz,12,'','')
 
 def structure_episodesone(url):
         link=OPEN_URL(url)
@@ -640,6 +671,13 @@ def addLink(name,url,iconimage,description):
         liz.setProperty("IsPlayable","true")
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz,isFolder=False)
         return ok
+def addClick(name,url,mode,iconimage,description):
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&description="+urllib.quote_plus(description)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+        liz.setInfo( type="Video", infoLabels={ "PlotOutline": description} )
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)
+        return ok
      
            
 #below tells plugin about the views                
@@ -767,7 +805,10 @@ elif mode==16:
 elif mode==17:
         print "TV_shows"
         tv_shows()
-           
+
+elif mode==18:
+        print "IMDB "+url
+        imdb(url)
      
            
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
