@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.23"
+VERSION = "1.24"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -44,7 +44,10 @@ class TextBox:
         #trailer = re.findall('<a href="(.+?)" class="video-colorbox" data-context="imdb" data-video="vi1168877337" itemprop="trailer">', link)
         #if not trailer:
         #    trailer = ''
-        text = title[0]+'\n\n'+rating[0]+'\n'+description[0]
+        if description:
+            text = title[0]+'\n\n'+rating[0]+'\n'+description[0]
+        else:
+            text = title[0]+'\n\n'+rating[0]
         self.win.getControl(self.CONTROL_TEXTBOX).setText(text)
 
 def parseDate(dateString):
@@ -215,6 +218,7 @@ def CATEGORIES():
         addDir('DivX Movies','structure_divx_movies',3,divxicon,'DivX Movies')
         addDir('Flash Movies','structure_flash_movies',6,flashicon,'Flash Movies')
         addDir('Pre-Retail','structure_preretail',16,icon,'Pre-Retail')
+        addDir('Foreign Movies','foreignmovies',19,icon,'Foreign Movies')
         addDir('Search','structure_search(url)',10,searchicon,'Search')
         addDir('TV Shows','tv_shows()',17,icon,'TV Shows')
         #addDir('HD TV Shows','structure_HD_TV',7,icon,'HD TV Shows')
@@ -551,42 +555,6 @@ def structure_flash_movies():
         addDir('Movies Pre 1979             Recently Added','http://board.dailyflix.net/index.php?/forum/68-flash-1979-earlier/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies Pre 1979  - Recently Added')        
         setView('divxmovies', 'default')
 
-#def structure_HD_TV():
-#        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'HD General TV - A-Z')
-#        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/?sort_key=title&sort_by=A-Z',14,icon,'HD Comedy - A-Z')
-#        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'HD Sci-Fi/Fantasy/Horror - A-Z')
-#        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'HD Cartoons - A-Z')
-#        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'HD Kids TV and Cartoons - A-Z')
-#        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/35-hd-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'HD General TV - Recently Added')
-#        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/37-hd-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Comedy - Recently Added')
-#        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/38-hd-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Sci-Fi/Fantasy/Horror - Recently Added')
-#        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/39-hd-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Cartoons - Recently Added')
-#        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/40-hd-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'HD Kids TV and Cartoons - Recently Added')
-
-#def structure_divx_TV():
-#        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'DivX General TV - A-Z')
-#        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/?sort_key=title&sort_by=A-Z',14,icon,'DivX Comedy - A-Z')
-#        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'DivX Sci-Fi/Fantasy/Horror - A-Z')
-#        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'DivX Cartoons - A-Z')
-#        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'DivX Kids TV and Cartoons - A-Z')
-#        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/28-divx-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX General TV - Recently Added')
-#        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/30-divx-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Comedy - Recently Added')
-#        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/31-divx-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Sci-Fi/Fantasy/Horror - Recently Added')
-#        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/32-divx-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Cartoons - Recently Added')
-#        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/33-divx-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'DivX Kids TV and Cartoons - Recently Added')
-
-#def structure_flash_TV():
-#        addDir('General TV                      A-Z','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/?sort_key=title&sort_by=A-Z',14,icon,'Flash General TV - A-Z')
-#        addDir('Comedy                          A-Z','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/?sort_key=title&sort_by=A-Z',14,icon,'Flash Comedy - A-Z')
-#        addDir('Sci-Fi/Fantasy/Horror   A-Z','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/?sort_key=title&sort_by=A-Z',14,icon,'Flash Sci-Fi/Fantasy/Horror - A-Z')
-#        addDir('Cartoons                        A-Z','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Flash Cartoons - A-Z')
-#        addDir('Kids TV and Cartoons    A-Z','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/?sort_key=title&sort_by=A-Z',14,icon,'Flash Kids TV and Cartoons - A-Z')
-#        addDir('General TV                      Recently Added','http://board.dailyflix.net/index.php?/forum/42-flashflv-general-tv/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash General TV - Recently Added')
-#        addDir('Comedy                          Recently Added','http://board.dailyflix.net/index.php?/forum/44-flashflv-comedy/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Comedy - Recently Added')
-#        addDir('Sci-Fi/Fantasy/Horror   Recently Added','http://board.dailyflix.net/index.php?/forum/45-flashflv-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Sci-Fi/Fantasy/Horror - Recently Added')
-#        addDir('Cartoons                        Recently Added','http://board.dailyflix.net/index.php?/forum/46-flashflv-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Cartoons - Recently Added')
-#        addDir('Kids TV and Cartoons    Recently Added','http://board.dailyflix.net/index.php?/forum/47-flashflv-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Flash Kids TV and Cartoons - Recently Added')
-
 def structure_preretail():
         addDir('Pre-Retail - DivX                   A-Z','http://board.dailyflix.net/index.php?/forum/217-preretail-flix-divx/?sort_key=title&sort_by=A-Z',1,icon,'Pre-Retail - DivX - A-Z')
         addDir('Pre-Retail - Flash                  A-Z','http://board.dailyflix.net/index.php?/forum/218-preretail-flix-flash/?sort_key=title&sort_by=A-Z',1,icon,'Pre-Retail - Flash - A-Z')
@@ -609,6 +577,92 @@ def tv_shows():
         addDir('Sci-Fi/Fantasy/Horror                  Recently Added','http://board.dailyflix.net/index.php?/forum/31-sci-fi-fantasy-horror/?sort_key=last_post&sort_by=Z-A',14,icon,'Sci-Fi/Fantasy/Horror - Recently Added')
         addDir('Teen Cartoons                                Recently Added','http://board.dailyflix.net/index.php?/forum/32-teen-oriented-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Teen Cartoons - Recently Added')
         addDir('Kids TV and Cartoons                   Recently Added','http://board.dailyflix.net/index.php?/forum/33-kids-tv-shows-and-cartoons/?sort_key=last_post&sort_by=Z-A',14,icon,'Kids TV and Cartoons - Recently Added')
+
+def foreignmovies():
+        addDir('Chinese','chinese',20,icon,'Chinese')
+        addDir('Dutch/Flemish','dutch',21,icon,'Dutch/Flemish')
+        addDir('French','french',22,icon,'French')
+        addDir('German','german',23,icon,'German')
+        addDir('Italian','italian',24,icon,'Italian')
+        addDir('Japanese','japanese',25,icon,'Japanese')
+        addDir('Korean','korean',26,icon,'Korean')
+        addDir('Russian','russian',27,icon,'Russian')
+        addDir('Scandinavian','scandinavian',28,icon,'Scandinavian')
+        addDir('Spanish','spanish',29,icon,'Spanish')
+        addDir('Thai','thai',30,icon,'Thai')
+        addDir('Other','other',31,icon,'Other')
+
+def chinese():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/158-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/158-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/159-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/159-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def dutch():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/160-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/160-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/161-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/161-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def french():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/164-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/164-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/163-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/163-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def german():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/165-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/165-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/166-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/166-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def italian():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/167-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/167-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/168-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/168-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def japanese():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/169-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/169-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/170-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/170-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def korean():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/171-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/171-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/172-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/172-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def russian():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/173-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/173-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/174-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/174-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def scandinavian():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/175-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/175-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/176-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/176-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def spanish():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/177-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/177-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/178-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/178-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def thai():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/308-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/308-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/309-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/309-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
+
+def other():
+        addDir('English Subbed/Dubbed                    A-Z','http://board.dailyflix.net/index.php?/forum/179-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'English Subbed/Dubbed')
+        addDir('English Subbed/Dubbed                    Recently Added','http://board.dailyflix.net/index.php?/forum/179-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           A-Z','http://board.dailyflix.net/index.php?/forum/180-non-english-subbeddubbed/?sort_key=title&sort_by=A-Z',1,icon,'Non English Subbed/Dubbed')
+        addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/180-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
         
 def PLAY(name,url):
         GA('Playing :',name)
@@ -811,6 +865,58 @@ elif mode==17:
 elif mode==18:
         print "IMDB "+url
         imdb(url)
+
+elif mode==19:
+        print 'Foreign Movies'
+        foreignmovies()
+
+elif mode==20:
+        print 'Chinese'
+        chinese()
+
+elif mode==21:
+        print 'Dutch'
+        dutch()
+
+elif mode==22:
+        print 'French'
+        french()
+
+elif mode==23:
+        print 'German'
+        german()
+
+elif mode==24:
+        print 'Italian'
+        italian()
+
+elif mode==25:
+        print 'Japanese'
+        japanese()
+
+elif mode==26:
+        print 'Korean'
+        korean()
+
+elif mode==27:
+        print 'Russian'
+        russian()
+
+elif mode==28:
+        print 'Scandinavian'
+        scandinavian()
+
+elif mode==29:
+        print 'Spanish'
+        spanish()
+
+elif mode==30:
+        print 'Thai'
+        thai()
+
+elif mode==31:
+        print 'Other'
+        other()
      
            
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

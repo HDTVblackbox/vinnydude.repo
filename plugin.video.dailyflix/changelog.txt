@@ -1,3 +1,7 @@
+v1.24
+Added Foreign Movies
+Corrected script error when no imdb plot summary
+
 v1.23
 Tightened IMDB code
 
