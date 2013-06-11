@@ -1,3 +1,6 @@
+v1.26
+Improved aome of the site scraping
+
 v1.25
 Removed filestube links from results
 

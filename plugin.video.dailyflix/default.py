@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.25"
+VERSION = "1.26"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -282,9 +282,11 @@ def nextdirectory_nextdirectory(url): #links
         if imdbz:
             imdbz = imdbz[0].replace('/reference', '')
             addClick('[COLOR yellow]IMDB Info[/COLOR]',imdbz,18,imdbicon,'')
-        match=re.compile('''<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+filestube)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?((?!nfomation).+?)\..+?</a''').findall(link)
+        match=re.compile('''<a href='((?:(?!imdb|facebook|imgur|postimage|filestube|nfomation|leetleech|paste2|wikipedia|fromMemberID|nfomation).)+?)' class='bbc_url' title='External link' rel='external'>''').findall(link)
         match.reverse()
-        for url, name in match:
+        for url in match:
+            name = re.findall('http://w?w?w?\.?(.+?)\..+?', url)
+            for name in name:
                 addDir(name,url,5,cover[0],'')
         match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(link) #prev/next page
         if match:
@@ -506,10 +508,12 @@ def structure_seasons(url):
 def structure_episodesone(url):
         link=OPEN_URL(url)
         episodes=re.compile(description+"(.+?)((</div>|</a><br />.<br />))",re.DOTALL).findall(link)
-        links=re.compile("<a href='((?!(?:.+imdb|.+facebook|.+imgur|.+postimage|.+filestube)).+?)' class='.+?' title='.+?' rel='.+?'>http://w?w?w?\.?((?!nfomation).+?)\..+?</a").findall(str(episodes))
+        links=re.compile("<a href='((?:(?!imdb|facebook|imgur|postimage|filestube|nfomation|leetleech|paste2|wikipedia|fromMemberID|nfomation).)+?)' class='bbc_url' title='External link' rel='external'>").findall(str(episodes))
         links.reverse()
-        for url, name in links:
-            addDir(name,url,5,'','')
+        for url in links:
+            name = re.findall('http://w?w?w?\.?(.+?)\..+?', url)
+            for name in name:
+                addDir(name,url,5,'','')
         
 
 def structure_divx_movies():
