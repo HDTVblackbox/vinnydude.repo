@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.27"
+VERSION = "1.28"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -221,6 +221,7 @@ def CATEGORIES():
         addDir('Foreign Movies','foreignmovies',19,icon,'Foreign Movies')
         addDir('Search','structure_search(url)',10,searchicon,'Search')
         addDir('TV Shows','tv_shows()',17,icon,'TV Shows')
+        addSpecial('[COLOR yellow]Resolver Settings[/COLOR]','www.nonsense.com',69,'')
         #addDir('HD TV Shows','structure_HD_TV',7,icon,'HD TV Shows')
         #addDir('DivX TV Shows','structure_divx_TV',8,icon,'DivX TV Shows')
         #addDir('Flash TV Shows','structure_flash_TV',9,icon,'Flash TV Shows')
@@ -738,6 +739,10 @@ def addClick(name,url,mode,iconimage,description):
         liz.setInfo( type="Video", infoLabels={ "PlotOutline": description} )
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)
         return ok
+def addSpecial(name,url,mode,image):
+        liz=xbmcgui.ListItem(label = '[B]%s[/B]'%name,iconImage="",thumbnailImage = image)
+        liz.setProperty('fanart_image', '')
+        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=sys.argv[0]+"?url=%s&mode=%s&name=%s"%(url,mode,name),isFolder=False,listitem=liz)
      
            
 #below tells plugin about the views                
@@ -921,6 +926,9 @@ elif mode==30:
 elif mode==31:
         print 'Other'
         other()
+
+elif mode==69:
+    urlresolver.display_settings()
      
            
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

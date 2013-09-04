@@ -1,3 +1,6 @@
+v1.28
+FINALLY sorted out the resolver settings. You can now use your log in details for sites like VeeHD and Movreel etc.
+
 v1.27
 Removed some false scrapes
 
