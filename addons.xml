@@ -2,7 +2,7 @@
 <addons>
 <addon id="plugin.video.dailyflix"
        name="Dailyflix"
-       version="1.28"
+       version="1.29"
        provider-name="Vinnydude">
   <requires>
     <import addon="xbmc.python" version="2.0"/>

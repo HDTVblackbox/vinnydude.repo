@@ -10,7 +10,7 @@ img = ''
 
 PATH = "dailyflix"       
 UATRACK="UA-38375410-1"
-VERSION = "1.28"
+VERSION = "1.29"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -293,6 +293,30 @@ def nextdirectory_nextdirectory(url): #links
         if match:
             for name, url in match:
                 addDir('[B]'+name+'[/B]',url,2,'','')
+
+def structure_searchTC(name):
+        url = OPEN_URL('http://board.dailyflix.net/index.php')
+        go = 'search'
+        name = name.replace(' ','%20')
+        source = 'http://board.dailyflix.net/index.php?app=core&module=search&do=search&search_term='+name
+        linkz=OPEN_URL(source)
+        match=re.compile("<link rel='((?=(?:prev|first)).+?)' href='(.+?)'").findall(linkz) #prev/next page
+        if match:
+            for name, url in match:
+                addDir(''+name+'',url,11,'','')
+        results = re.compile("data-tooltip=\".+?\">((?!(?:mHD))\b|Flash|HD|DivX|DivX TV|HD TV|Flash TV|\b)</a>.+?<h4><a href='(.+?)' title='View result'>(.+?)</a></h4>", re.DOTALL).findall(linkz)
+        for name, url, description in results:
+            if "TV" in name:
+                addDir(description+' '+name,url,12,searchicon,'')
+            else:
+                addDir(description+' '+name,url,2,searchicon,'')
+        match=re.compile("<link rel='((?=(?:next|last)).+?)' href='(.+?)'").findall(linkz) #prev/next page
+        if match:
+            for name, url in match:
+                addDir(''+name+'',url,11,'','')
+
+            else:
+                print 'FAILED SEARCH'
 
 def structure_search(url):
         url = OPEN_URL('http://board.dailyflix.net/index.php')
@@ -926,6 +950,10 @@ elif mode==30:
 elif mode==31:
         print 'Other'
         other()
+
+elif mode==32:
+        print "structure_searchTC "+name
+        structure_searchTC(name)
 
 elif mode==69:
     urlresolver.display_settings()
