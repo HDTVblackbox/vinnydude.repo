@@ -1,3 +1,6 @@
+v1.30
+Changed dailyflix icon to work better with certain skins
+
 v1.29
 Added a small piece of script so another app can use the dailyflix search results
 
