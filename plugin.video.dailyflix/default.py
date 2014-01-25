@@ -9,8 +9,7 @@ net = Net()
 img = ''
 
 PATH = "dailyflix"       
-UATRACK="UA-38375410-1"
-VERSION = "1.30"
+VERSION = "1.31"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -18,199 +17,7 @@ hdicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/My-Videos-icon.p
 flashicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Macromedia-Flash-icon.png'
 searchicon = 'http://icons.iconarchive.com/icons/iconleak/atrous/256/search-icon.png'
 imdbicon = 'http://www.glitterazi.com/wp-content/uploads/2012/11/imdb-e1352114214951.jpeg'
-     
-if ADDON.getSetting('visitor_ga')=='':
-    from random import randint
-    ADDON.setSetting('visitor_ga',str(randint(0, 0x7fffffff)))
 
-class TextBox:
-    WINDOW = 10147
-    CONTROL_LABEL = 1
-    CONTROL_TEXTBOX = 5
-
-    def __init__(self, *args, **kwargs):
-        xbmc.executebuiltin( "ActivateWindow(%d)" % (self.WINDOW))
-        self.win = xbmcgui.Window(self.WINDOW)
-        self.setControls()
-
-
-    def setControls( self ):
-        link=OPEN_URL(url)
-        title = re.findall('<title>(.+?) - IMDb</title>', link)
-        rating = re.findall('title="(.+?) - click stars to rate"', link)
-        description = re.findall('<div class="inline canwrap" itemprop="description">.+?<p>(.+?)<em class="nobr">', link, re.DOTALL)
-        if not description:
-            description = re.findall('<div class="inline canwrap" itemprop="description">.+?<p>(.+?)</p>', link, re.DOTALL)
-        #trailer = re.findall('<a href="(.+?)" class="video-colorbox" data-context="imdb" data-video="vi1168877337" itemprop="trailer">', link)
-        #if not trailer:
-        #    trailer = ''
-        if description:
-            text = title[0]+'\n\n'+rating[0]+'\n'+description[0]
-        else:
-            text = title[0]+'\n\n'+rating[0]
-        self.win.getControl(self.CONTROL_TEXTBOX).setText(text)
-
-def parseDate(dateString):
-    try:
-        return datetime.datetime.fromtimestamp(time.mktime(time.strptime(dateString.encode('utf-8', 'replace'), "%Y-%m-%d %H:%M:%S")))
-    except:
-        return datetime.datetime.today() - datetime.timedelta(days = 1) #force update
-
-
-def checkGA():
-
-    secsInHour = 60 * 60
-    threshold  = 2 * secsInHour
-
-    now   = datetime.datetime.today()
-    prev  = parseDate(ADDON.getSetting('ga_time'))
-    delta = now - prev
-    nDays = delta.days
-    nSecs = delta.seconds
-
-    doUpdate = (nDays > 0) or (nSecs > threshold)
-    if not doUpdate:
-        return
-
-    ADDON.setSetting('ga_time', str(now).split('.')[0])
-    APP_LAUNCH()    
-    
-                    
-def send_request_to_google_analytics(utm_url):
-    ua='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
-    import urllib2
-    try:
-        req = urllib2.Request(utm_url, None,
-                                    {'User-Agent':ua}
-                                     )
-        response = urllib2.urlopen(req).read()
-    except:
-        print ("GA fail: %s" % utm_url)         
-    return response
-       
-def GA(group,name):
-        try:
-            try:
-                from hashlib import md5
-            except:
-                from md5 import md5
-            from random import randint
-            import time
-            from urllib import unquote, quote
-            from os import environ
-            from hashlib import sha1
-            VISITOR = ADDON.getSetting('visitor_ga')
-            utm_gif_location = "http://www.google-analytics.com/__utm.gif"
-            if not group=="None":
-                    utm_track = utm_gif_location + "?" + \
-                            "utmwv=" + VERSION + \
-                            "&utmn=" + str(randint(0, 0x7fffffff)) + \
-                            "&utmt=" + "event" + \
-                            "&utme="+ quote("5("+PATH+"*"+group+"*"+name+")")+\
-                            "&utmp=" + quote(PATH) + \
-                            "&utmac=" + UATRACK + \
-                            "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR,VISITOR,"2"])
-                    try:
-                        print "============================ POSTING TRACK EVENT ============================"
-                        send_request_to_google_analytics(utm_track)
-                    except:
-                        print "============================  CANNOT POST TRACK EVENT ============================" 
-            if name=="None":
-                    utm_url = utm_gif_location + "?" + \
-                            "utmwv=" + VERSION + \
-                            "&utmn=" + str(randint(0, 0x7fffffff)) + \
-                            "&utmp=" + quote(PATH) + \
-                            "&utmac=" + UATRACK + \
-                            "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR, VISITOR,"2"])
-            else:
-                if group=="None":
-                       utm_url = utm_gif_location + "?" + \
-                                "utmwv=" + VERSION + \
-                                "&utmn=" + str(randint(0, 0x7fffffff)) + \
-                                "&utmp=" + quote(PATH+"/"+name) + \
-                                "&utmac=" + UATRACK + \
-                                "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR, VISITOR,"2"])
-                else:
-                       utm_url = utm_gif_location + "?" + \
-                                "utmwv=" + VERSION + \
-                                "&utmn=" + str(randint(0, 0x7fffffff)) + \
-                                "&utmp=" + quote(PATH+"/"+group+"/"+name) + \
-                                "&utmac=" + UATRACK + \
-                                "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR, VISITOR,"2"])
-                                
-            print "============================ POSTING ANALYTICS ============================"
-            send_request_to_google_analytics(utm_url)
-            
-        except:
-            print "================  CANNOT POST TO ANALYTICS  ================" 
-         
-            
-def APP_LAUNCH():
-        versionNumber = int(xbmc.getInfoLabel("System.BuildVersion" )[0:2])
-        if versionNumber < 12:
-            if xbmc.getCondVisibility('system.platform.osx'):
-                if xbmc.getCondVisibility('system.platform.atv2'):
-                    log_path = '/var/mobile/Library/Preferences'
-                else:
-                    log_path = os.path.join(os.path.expanduser('~'), 'Library/Logs')
-            elif xbmc.getCondVisibility('system.platform.ios'):
-                log_path = '/var/mobile/Library/Preferences'
-            elif xbmc.getCondVisibility('system.platform.windows'):
-                log_path = xbmc.translatePath('special://home')
-                log = os.path.join(log_path, 'xbmc.log')
-                logfile = open(log, 'r').read()
-            elif xbmc.getCondVisibility('system.platform.linux'):
-                log_path = xbmc.translatePath('special://home/temp')
-            else:
-                log_path = xbmc.translatePath('special://logpath')
-            log = os.path.join(log_path, 'xbmc.log')
-            logfile = open(log, 'r').read()
-            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
-        elif versionNumber > 11:
-            print '======================= more than ===================='
-            log_path = xbmc.translatePath('special://logpath')
-            log = os.path.join(log_path, 'xbmc.log')
-            logfile = open(log, 'r').read()
-            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
-        else:
-            logfile='Starting XBMC (Unknown Git:.+?Platform: Unknown. Built.+?'
-            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
-        print '==========================   '+PATH+' '+VERSION+'  =========================='
-        try:
-            from hashlib import md5
-        except:
-            from md5 import md5
-        from random import randint
-        import time
-        from urllib import unquote, quote
-        from os import environ
-        from hashlib import sha1
-        import platform
-        VISITOR = ADDON.getSetting('visitor_ga')
-        for build, PLATFORM in match:
-            if re.search('12',build[0:2],re.IGNORECASE): 
-                build="Frodo" 
-            if re.search('11',build[0:2],re.IGNORECASE): 
-                build="Eden" 
-            if re.search('13',build[0:2],re.IGNORECASE): 
-                build="Gotham" 
-            print build
-            print PLATFORM
-            utm_gif_location = "http://www.google-analytics.com/__utm.gif"
-            utm_track = utm_gif_location + "?" + \
-                    "utmwv=" + VERSION + \
-                    "&utmn=" + str(randint(0, 0x7fffffff)) + \
-                    "&utmt=" + "event" + \
-                    "&utme="+ quote("5(APP LAUNCH*"+build+"*"+PLATFORM+")")+\
-                    "&utmp=" + quote(PATH) + \
-                    "&utmac=" + UATRACK + \
-                    "&utmcc=__utma=%s" % ".".join(["1", VISITOR, VISITOR, VISITOR,VISITOR,"2"])
-            try:
-                print "============================ POSTING APP LAUNCH TRACK EVENT ============================"
-                send_request_to_google_analytics(utm_track)
-            except:
-                print "============================  CANNOT POST APP LAUNCH TRACK EVENT ============================"
-checkGA()                
 
 #      addDir('name','url','mode','iconimage','description') mode is where it tells the plugin where to go scroll to bottom to see where mode is
 def CATEGORIES():
@@ -222,9 +29,6 @@ def CATEGORIES():
         addDir('Search','structure_search(url)',10,searchicon,'Search')
         addDir('TV Shows','tv_shows()',17,icon,'TV Shows')
         addSpecial('[COLOR yellow]Resolver Settings[/COLOR]','www.nonsense.com',69,'')
-        #addDir('HD TV Shows','structure_HD_TV',7,icon,'HD TV Shows')
-        #addDir('DivX TV Shows','structure_divx_TV',8,icon,'DivX TV Shows')
-        #addDir('Flash TV Shows','structure_flash_TV',9,icon,'Flash TV Shows')
         #addDir('Resolver Test','test_resolve',15,'','Test_Resolver')
         setView('movies', 'default')
         #setView is setting the automatic view.....first is what section "movies"......second is what you called it in the settings xml
@@ -542,12 +346,14 @@ def structure_episodesone(url):
         
 
 def structure_divx_movies():
+        addDir('Movies 2014                   A-Z','http://board.dailyflix.net/index.php?/forum/422-divx-2014/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2014 - A-Z')
         addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/49-divx-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2012-2013 - A-Z')
         addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/50-divx-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2006-2011 - A-Z')
         addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/52-divx-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2000-2005 - A-Z')
         addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/55-divx-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 1990-1999 - A-Z')
         addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/56-divx-1980-1989/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 1980-1999 - A-Z')
         addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/57-divx-1979-earlier/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies Pre 1979  - A-Z')
+        addDir('Movies 2014                   Recently Added','http://board.dailyflix.net/index.php?/forum/422-divx-2014/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2014 - Recently Added')
         addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/49-divx-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/50-divx-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/52-divx-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2000-2005 - Recently Added')
@@ -557,11 +363,13 @@ def structure_divx_movies():
         setView('divxmovies', 'default')
 
 def structure_HD_movies():
+        addDir('Movies 2014                   A-Z','http://board.dailyflix.net/index.php?/forum/423-hd-movies-2014/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2014 - A-Z')
         addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2012-2013 - A-Z')
         addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2006-2011 - A-Z')
         addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2000-2005 - A-Z')
         addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 1990-1999 - A-Z')
         addDir('Movies Pre 1989             A-Z','http://board.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies Pre 1989  - A-Z')
+        addDir('Movies 2014                   Recently Added','http://board.dailyflix.net/index.php?/forum/423-hd-movies-2014/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2014 - Recently Added')
         addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2000-2005 - Recently Added')
@@ -570,12 +378,14 @@ def structure_HD_movies():
         setView('divxmovies', 'default')
 
 def structure_flash_movies():
+        addDir('Movies 2014                   A-Z','http://board.dailyflix.net/index.php?/forum/424-flash-2014/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2014 - A-Z')
         addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/64-flash-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2012-2013 - A-Z')
         addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/65-flash-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2006-2011 - A-Z')
         addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/66-flash-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2000-2005 - A-Z')
         addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/67-flash-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 1990-1999 - A-Z')
         addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/210-flash-1980-1989/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 1980-1999 - A-Z')
         addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/68-flash-1979-earlier/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies Pre 1979  - A-Z')
+        addDir('Movies 2014                   Recently Added','http://board.dailyflix.net/index.php?/forum/424-flash-2014/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2014 - Recently Added')
         addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/64-flash-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/65-flash-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/66-flash-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2000-2005 - Recently Added')
@@ -694,7 +504,6 @@ def other():
         addDir('Non English Subbed/Dubbed           Recently Added','http://board.dailyflix.net/index.php?/forum/180-non-english-subbeddubbed/?sort_key=last_post&sort_by=Z-A',1,icon,'Non English Subbed/Dubbed')
         
 def PLAY(name,url):
-        GA('Playing :',name)
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
         listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png")

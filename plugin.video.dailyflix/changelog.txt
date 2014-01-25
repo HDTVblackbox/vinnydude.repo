@@ -1,3 +1,7 @@
+v1.31
+REMOVED GA :)
+Added 2014 folders
+
 v1.30
 Changed dailyflix icon to work better with certain skins
 
