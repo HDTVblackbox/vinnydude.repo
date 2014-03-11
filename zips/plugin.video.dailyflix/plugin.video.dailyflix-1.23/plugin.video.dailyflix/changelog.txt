@@ -1,34 +1,3 @@
-V1.32
-Fixed IMDB Code
-Added MicroHD folder
-Added MKV/MP4 (H264) folder
-
-v1.31
-REMOVED GA :)
-Added 2014 folders
-
-v1.30
-Changed dailyflix icon to work better with certain skins
-
-v1.29
-Added a small piece of script so another app can use the dailyflix search results
-
-v1.28
-FINALLY sorted out the resolver settings. You can now use your log in details for sites like VeeHD and Movreel etc.
-
-v1.27
-Removed some false scrapes
-
-v1.26
-Improved some of the site scraping
-
-v1.25
-Removed filestube links from results
-
-v1.24
-Added Foreign Movies
-Corrected script error when no imdb plot summary
-
 v1.23
 Tightened IMDB code
 
