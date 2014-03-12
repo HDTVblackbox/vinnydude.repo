@@ -1,3 +1,6 @@
+V1.33
+Added Support for Gotham
+
 V1.32
 Fixed IMDB Code
 Added MicroHD folder
