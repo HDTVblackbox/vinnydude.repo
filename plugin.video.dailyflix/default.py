@@ -9,7 +9,7 @@ net = Net()
 img = ''
 
 PATH = "dailyflix"       
-VERSION = "1.33"
+VERSION = "1.40"
 
 icon = 'http://board.dailyflix.net/public/style_images/5_1_DF05.png'
 divxicon = 'http://icons.iconarchive.com/icons/deleket/folder/256/Divx-Movies-icon.png'
@@ -372,14 +372,14 @@ def structure_episodesone(url):
         
 
 def structure_divx_movies():
-        addDir('Movies 2014                   A-Z','http://board.dailyflix.net/index.php?/forum/422-divx-2014/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2014 - A-Z')
+        addDir('Movies 2014-2015        A-Z','http://board.dailyflix.net/index.php?/forum/422-divx-2014-2015/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2014 - A-Z')
         addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/49-divx-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2012-2013 - A-Z')
         addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/50-divx-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2006-2011 - A-Z')
         addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/52-divx-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 2000-2005 - A-Z')
         addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/55-divx-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 1990-1999 - A-Z')
         addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/56-divx-1980-1989/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies 1980-1999 - A-Z')
         addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/57-divx-1979-earlier/?sort_key=title&sort_by=A-Z',1,icon,'DivX Movies Pre 1979  - A-Z')
-        addDir('Movies 2014                   Recently Added','http://board.dailyflix.net/index.php?/forum/422-divx-2014/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2014 - Recently Added')
+        addDir('Movies 2014-2015        Recently Added','http://board.dailyflix.net/index.php?/forum/422-divx-2014-2015/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2014 - Recently Added')
         addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/49-divx-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/50-divx-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/52-divx-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies 2000-2005 - Recently Added')
@@ -388,14 +388,14 @@ def structure_divx_movies():
         addDir('Movies Pre 1979             Recently Added','http://board.dailyflix.net/index.php?/forum/57-divx-1979-earlier/?sort_key=last_post&sort_by=Z-A',1,icon,'DivX Movies Pre 1979  - Recently Added')        
 
 def structure_mkv():
-        addDir('Movies 2014                   A-Z','http://board.dailyflix.net/index.php?/forum/425-mkv-mp4-h264-2014/?sort_key=title&sort_by=A-Z',1,icon,'MKV/MP4 (H264) Movies 2014 - A-Z')
+        addDir('Movies 2014-2015        A-Z','http://board.dailyflix.net/index.php?/forum/425-mkv-mp4-h264-2014-2015/?sort_key=title&sort_by=A-Z',1,icon,'MKV/MP4 (H264) Movies 2014 - A-Z')
         addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/270-mkv-mp4-h264-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'MKV/MP4 (H264) Movies 2012-2013 - A-Z')
         addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/271-mkv-mp4-h264-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'MKV/MP4 (H264) Movies 2006-2011 - A-Z')
         addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/272-mkv-mp4-h264-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'MKV/MP4 (H264) Movies 2000-2005 - A-Z')
         addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/273-mkv-mp4-h264-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'MKV/MP4 (H264) Movies 1990-1999 - A-Z')
         addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/274-mkv-mp4-h264-1980-1989/?sort_key=title&sort_by=A-Z',1,icon,'MKV/MP4 (H264) Movies 1980-1999 - A-Z')
         addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/275-mkv-mp4-h264-1979-earlier/?sort_key=title&sort_by=A-Z',1,icon,'MKV/MP4 (H264) Movies Pre 1979  - A-Z')
-        addDir('Movies 2014                   Recently Added','http://board.dailyflix.net/index.php?/forum/425-mkv-mp4-h264-2014/?sort_key=last_post&sort_by=Z-A',1,icon,'MKV/MP4 (H264) Movies 2014 - Recently Added')
+        addDir('Movies 2014-2015        Recently Added','http://board.dailyflix.net/index.php?/forum/425-mkv-mp4-h264-2014-2015/?sort_key=last_post&sort_by=Z-A',1,icon,'MKV/MP4 (H264) Movies 2014 - Recently Added')
         addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/270-mkv-mp4-h264-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'MKV/MP4 (H264) Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/271-mkv-mp4-h264-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'MKV/MP4 (H264) Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/272-mkv-mp4-h264-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'MKV/MP4 (H264) Movies 2000-2005 - Recently Added')
@@ -404,13 +404,13 @@ def structure_mkv():
         addDir('Movies Pre 1979             Recently Added','http://board.dailyflix.net/index.php?/forum/275-mkv-mp4-h264-1979-earlier/?sort_key=last_post&sort_by=Z-A',1,icon,'MKV/MP4 (H264) Movies Pre 1979  - Recently Added')        
 
 def structure_HD_movies():
-        addDir('Movies 2014                   A-Z','http://board.dailyflix.net/index.php?/forum/423-hd-movies-2014/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2014 - A-Z')
+        addDir('Movies 2014-2015        A-Z','http://board.dailyflix.net/index.php?/forum/423-hd-movies-2014-2015/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2014 - A-Z')
         addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2012-2013 - A-Z')
         addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2006-2011 - A-Z')
         addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 2000-2005 - A-Z')
         addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/202-hd-movies-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies 1990-1999 - A-Z')
         addDir('Movies Pre 1989             A-Z','http://board.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/?sort_key=title&sort_by=A-Z',1,icon,'HD Movies Pre 1989  - A-Z')
-        addDir('Movies 2014                   Recently Added','http://board.dailyflix.net/index.php?/forum/423-hd-movies-2014/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2014 - Recently Added')
+        addDir('Movies 2014-2015        Recently Added','http://board.dailyflix.net/index.php?/forum/423-hd-movies-2014-2015/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2014 - Recently Added')
         addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/196-hd-movies-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/197-hd-movies-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/199-hd-movies-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies 2000-2005 - Recently Added')
@@ -418,14 +418,14 @@ def structure_HD_movies():
         addDir('Movies Pre 1989             Recently Added','http://board.dailyflix.net/index.php?/forum/203-hd-movies-1989-earlier/?sort_key=last_post&sort_by=Z-A',1,icon,'HD Movies Pre 1989  - Recently Added')        
 
 def structure_flash_movies():
-        addDir('Movies 2014                   A-Z','http://board.dailyflix.net/index.php?/forum/424-flash-2014/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2014 - A-Z')
+        addDir('Movies 2014-2015        A-Z','http://board.dailyflix.net/index.php?/forum/424-flash-2014-2015/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2014 - A-Z')
         addDir('Movies 2012-2013        A-Z','http://board.dailyflix.net/index.php?/forum/64-flash-2012-2013/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2012-2013 - A-Z')
         addDir('Movies 2006-2011        A-Z','http://board.dailyflix.net/index.php?/forum/65-flash-2006-2011/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2006-2011 - A-Z')
         addDir('Movies 2000-2005        A-Z','http://board.dailyflix.net/index.php?/forum/66-flash-2000-2005/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 2000-2005 - A-Z')
         addDir('Movies 1990-1999        A-Z','http://board.dailyflix.net/index.php?/forum/67-flash-1990-1999/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 1990-1999 - A-Z')
         addDir('Movies 1980-1989        A-Z','http://board.dailyflix.net/index.php?/forum/210-flash-1980-1989/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies 1980-1999 - A-Z')
         addDir('Movies Pre 1979             A-Z','http://board.dailyflix.net/index.php?/forum/68-flash-1979-earlier/?sort_key=title&sort_by=A-Z',1,icon,'Flash Movies Pre 1979  - A-Z')
-        addDir('Movies 2014                   Recently Added','http://board.dailyflix.net/index.php?/forum/424-flash-2014/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2014 - Recently Added')
+        addDir('Movies 2014-2015        Recently Added','http://board.dailyflix.net/index.php?/forum/424-flash-2014-2015/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2014 - Recently Added')
         addDir('Movies 2012-2013        Recently Added','http://board.dailyflix.net/index.php?/forum/64-flash-2012-2013/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2012-2013 - Recently Added')
         addDir('Movies 2006-2011        Recently Added','http://board.dailyflix.net/index.php?/forum/65-flash-2006-2011/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2006-2011 - Recently Added')
         addDir('Movies 2000-2005        Recently Added','http://board.dailyflix.net/index.php?/forum/66-flash-2000-2005/?sort_key=last_post&sort_by=Z-A',1,icon,'Flash Movies 2000-2005 - Recently Added')
