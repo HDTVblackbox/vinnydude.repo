@@ -1,0 +1,8 @@
+[B]Version 1.0.3[/B]
+- Change to Zips
+[B]Version 1.0.2[/B]
+- Change path
+[B]Version 1.0.1[/B]
+- Change Icon
+[B]Version 1.0[/B]
+- Initial version
